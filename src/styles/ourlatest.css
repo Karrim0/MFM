@@ -1,0 +1,126 @@
+.latest-section {
+    padding: 30px 10%;
+    color: #fff;
+    overflow: hidden;
+
+    background: linear-gradient(to left,
+            #017B8D 0%,
+            #028ea3 40%,
+            #8bc3cc 75%,
+            #ffffff 100%);
+}
+
+.latest-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 80px;
+}
+
+/* ===== IMAGE SIDE ===== */
+
+.latest-image {
+    flex: 1;
+    border-radius: 20px;
+    /* خلفية في حالة وجود فراغ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.latest-image img {
+    width: 100%;
+    height: auto;
+    /* مهم علشان متتقصش */
+    max-height: 500px;
+    /* يحافظ على حجم مناسب */
+    object-fit: contain;
+    /* يعرض الصورة كاملة */
+    display: block;
+    transition: transform 0.6s ease;
+}
+
+.latest-image:hover img {
+    transform: scale(1.05);
+}
+
+/* ===== CONTENT SIDE ===== */
+
+.latest-content {
+    flex: 1;
+    max-width: 600px;
+}
+
+.latest-content h2 {
+    color: rgb(255, 255, 255);
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+}
+
+.latest-content p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #ffffff;
+}
+
+/* Our Latest Button */
+.ourlatest-btn {
+    margin-top: 2rem;
+    background-color: #05aab6;
+    color: #ffffff;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(1, 104, 112, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover animation */
+.ourlatest-btn::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 120%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: transform 0.5s ease;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.ourlatest-btn:hover::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.ourlatest-btn:hover {
+    background-color: #017b8d;
+    box-shadow: 0 8px 20px rgba(35, 139, 146, 0.5);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 992px) {
+    .latest-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .latest-image img {
+        max-height: 400px;
+    }
+
+    .latest-content h2 {
+        font-size: 48px;
+    }
+}

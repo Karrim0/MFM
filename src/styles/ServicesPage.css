@@ -1,0 +1,305 @@
+.services-page {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    color: #222;
+}
+
+/* ================= HERO SECTION ================= */
+
+.services-hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.services-hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+
+.services-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 25% 35%,
+            rgba(1, 123, 141, 0.55) 0%,
+            rgba(1, 123, 141, 0.35) 25%,
+            transparent 60%),
+        linear-gradient(120deg,
+            rgba(1, 123, 141, 0.65) 45%,
+            rgba(131, 131, 131, 0.55) 100%);
+}
+
+.services-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 20px;
+}
+
+.services-hero-content h1 {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow:
+        0 0 10px rgba(0, 212, 255, 0.3),
+        0 0 20px rgba(0, 212, 255, 0.3),
+        0 0 40px rgba(0, 212, 255, 0.3);
+}
+
+.services-hero-content p {
+    line-height: 1.7;
+    font-size: 18px;
+}
+
+/* ================= CONTENT SECTION ================= */
+
+.services-content-section {
+    padding: 80px 2%;
+}
+
+.services-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.services-image-grid {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.services-image-grid img {
+    width: 100%;
+    border-radius: 8px;
+    transition: 0.3s ease;
+}
+
+.services-image-grid img:hover {
+    transform: scale(1.05);
+}
+
+.services-text-content h2 {
+    color: #017B8D;
+    margin-bottom: 20px;
+    text-align: start;
+}
+
+.services-intro {
+    font-weight: 500;
+    margin-bottom: 30px;
+    line-height: 1.7;
+}
+
+.services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.services-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.services-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #017B8D;
+    border-radius: 50%;
+}
+
+/* ================= OUR SERVICES ================= */
+
+.services-our-services {
+    padding: 100px 10%;
+    background: linear-gradient(135deg, #b9d2d6, #017B8D, #9aa8ad);
+    text-align: center;
+    color: white;
+}
+
+.services-sectionservices-title {
+    font-size: 36px;
+    margin-bottom: 60px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+
+}
+
+.services-section-title::after {
+    content: "";
+    width: 70px;
+    height: 4px;
+    background: #00d4ff;
+    display: block;
+    margin: 15px auto 0;
+    border-radius: 5px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 35px;
+}
+
+/* مهم جداً عشان Link يتصرف ككارد */
+.services-card {
+    display: block;
+    text-decoration: none;
+    color: white;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    padding: 40px 25px;
+    border-radius: 18px;
+    transition: all 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.services-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
+}
+
+/* تحسين الـ focus للـ accessibility */
+.services-card:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.6);
+}
+
+.services-icon-circle {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #017B8D, #017B8D);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    transition: 0.4s ease;
+}
+
+.services-card:hover .services-icon-circle {
+    transform: scale(1.15) rotate(8deg);
+}
+
+.services-card h3 {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* ===== CERTIFICATE SECTION ===== */
+.services-certificate-section {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.services-certificate-wrapper {
+    width: 100%;
+    max-width: 900px;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.services-certificate-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    /* الصورة تظهر كاملة */
+    transition: transform 0.4s ease;
+}
+
+/* Hover effect */
+.services-certificate-wrapper:hover {
+    transform: scale(1.03);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .services-certificate-section {
+        padding: 50px 15px;
+    }
+
+    .services-certificate-wrapper {
+        max-width: 700px;
+    }
+}
+
+@media (max-width: 768px) {
+    .services-certificate-section {
+        padding: 40px 10px;
+    }
+
+    .services-certificate-wrapper {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-certificate-section {
+        padding: 30px 5px;
+    }
+
+    .services-certificate-wrapper {
+        border-radius: 12px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 992px) {
+    .services-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .services-hero-content h1 {
+        font-size: 36px;
+    }
+
+    .services-hero-content p {
+        font-size: 16px;
+    }
+
+    .services-center-video-wrapper {
+        width: 90%;
+        height: 40vh;
+    }
+}
+
+.services-card,
+.services-image-grid img,
+.services-text-content,
+.services-hero-content h1,
+.services-hero-content p {
+    will-change: transform, opacity;
+}
