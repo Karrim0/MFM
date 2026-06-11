@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Phone } from 'lucide-react';
-import '../styles/philosophy.css';
+import { useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Phone } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import "../styles/philosophy.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,93 +16,126 @@ interface PhilosophyCard {
 
 const philosophyData: PhilosophyCard[] = [
     {
-        number: '01',
-        title: 'Systematic Approach',
+        number: "01",
+        title: "Systematic Approach",
         description:
-            'We believe in a methodical and structured approach to every project. Our systematic methodology ensures consistency, quality, and measurable results across all client engagements. By following proven frameworks and best practices, we deliver solutions that are both innovative and reliable.',
+            "We believe in a methodical and structured approach to every project. Our systematic methodology ensures consistency, quality, and measurable results across all client engagements. By following proven frameworks and best practices, we deliver solutions that are both innovative and reliable.",
     },
     {
-        number: '02',
-        title: 'Respect Matters',
+        number: "02",
+        title: "Respect Matters",
         description:
-            'Respect is the foundation of every relationship we build. We treat our clients, partners, and team members with the highest level of professionalism and consideration. This mutual respect creates an environment where creativity flourishes and collaboration thrives.',
+            "Respect is the foundation of every relationship we build. We treat our clients, partners, and team members with the highest level of professionalism and consideration. This mutual respect creates an environment where creativity flourishes and collaboration thrives.",
     },
     {
-        number: '03',
-        title: 'Positive Message',
+        number: "03",
+        title: "Positive Message",
         description:
-            'We are committed to spreading positivity through every campaign and interaction. Our communications are designed to inspire, engage, and create meaningful connections. By focusing on optimistic and authentic messaging, we help brands build lasting emotional bonds with their audiences.',
+            "We are committed to spreading positivity through every campaign and interaction. Our communications are designed to inspire, engage, and create meaningful connections. By focusing on optimistic and authentic messaging, we help brands build lasting emotional bonds with their audiences.",
     },
 ];
 
 const Philosophy = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const buttonCTARef = useRef<HTMLButtonElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const cards = containerRef.current?.querySelectorAll('.philosophy-column');
+    useLayoutEffect(() => {
+        const media = gsap.matchMedia();
 
-            if (cards) {
+        const context = gsap.context(() => {
+            media.add("(prefers-reduced-motion: no-preference)", () => {
                 gsap.fromTo(
-                    cards,
-                    { opacity: 0, y: 50 },
+                    ".home-philosophy-card",
                     {
-                        opacity: 1,
+                        y: 38,
+                        opacity: 0,
+                    },
+                    {
                         y: 0,
-                        duration: 0.8,
-                        ease: 'power3.out',
-                        stagger: 0.2,
+                        opacity: 1,
+                        duration: 0.7,
+                        stagger: 0.12,
+                        ease: "power3.out",
                         scrollTrigger: {
-                            trigger: containerRef.current,
-                            start: 'top center+=100',
-                            toggleActions: 'play none none reverse',
+                            trigger: ".home-philosophy-grid",
+                            start: "top 78%",
                         },
                     }
                 );
-            }
 
-            gsap.fromTo(
-                buttonCTARef.current,
-                { opacity: 0, y: 30 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: buttonCTARef.current,
-                        start: 'top center+=100',
-                        toggleActions: 'play none none reverse',
+                gsap.fromTo(
+                    ".home-philosophy-cta",
+                    {
+                        y: 25,
+                        opacity: 0,
                     },
-                }
-            );
-        });
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.7,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".home-philosophy-cta",
+                            start: "top 88%",
+                        },
+                    }
+                );
+            });
+        }, sectionRef);
 
-        return () => ctx.revert();
+        return () => {
+            media.revert();
+            context.revert();
+        };
     }, []);
 
     return (
-        <section className="philosophy">
-            <div className="philosophy-container" ref={containerRef}>
-                <div className="philosophy-columns">
-                    {philosophyData.map((item, index) => (
-                        <div key={index} className="philosophy-column">
-                            <div className="philosophy-icon">{item.number}</div>
-                            <h3 className="philosophy-title">{item.title}</h3>
-                            <p className="philosophy-description">{item.description}</p>
-                        </div>
+        <section
+            ref={sectionRef}
+            className="home-philosophy"
+            aria-label="Our philosophy"
+        >
+            <div className="home-philosophy-background" aria-hidden="true" />
+
+            <div className="home-philosophy-container">
+                <div className="home-philosophy-grid">
+                    {philosophyData.map((item) => (
+                        <article
+                            key={item.number}
+                            className="home-philosophy-card"
+                        >
+                            <span
+                                className="home-philosophy-number"
+                                aria-hidden="true"
+                            >
+                                {item.number}
+                            </span>
+
+                            <div className="home-philosophy-divider" />
+
+                            <h3 className="home-philosophy-title">
+                                {item.title}
+                            </h3>
+
+                            <p className="home-philosophy-description">
+                                {item.description}
+                            </p>
+                        </article>
                     ))}
                 </div>
 
                 <button
-                    ref={buttonCTARef}
-                    className="philosophy-cta"
+                    type="button"
+                    className="home-philosophy-cta"
                     onClick={() => navigate("/contact")}
                 >
-                    <Phone className="cta-icon" size={24} />
-                    <span>Call or mail to schedule your complimentary consult</span>
+                    <span className="home-philosophy-cta-icon">
+                        <Phone size={20} aria-hidden="true" />
+                    </span>
+
+                    <span>
+                        Call or mail to schedule your complimentary consult
+                    </span>
                 </button>
             </div>
         </section>

@@ -156,32 +156,15 @@ const ServicesPage: React.FC = () => {
                 gsap
                     .timeline({ defaults: { ease: "power3.out" } })
                     .fromTo(
-                        ".services-hero-kicker",
-                        { y: 18, autoAlpha: 0 },
-                        { y: 0, autoAlpha: 1, duration: 0.55 }
-                    )
-                    .fromTo(
                         ".services-hero-title",
                         { y: 42, autoAlpha: 0 },
-                        { y: 0, autoAlpha: 1, duration: 0.85 },
-                        "-=0.25"
+                        { y: 0, autoAlpha: 1, duration: 0.85 }
                     )
                     .fromTo(
                         ".services-hero-description",
                         { y: 24, autoAlpha: 0 },
-                        { y: 0, autoAlpha: 1, duration: 0.7 },
-                        "-=0.45"
-                    )
-                    .fromTo(
-                        ".services-hero-actions > *",
-                        { y: 18, autoAlpha: 0 },
-                        {
-                            y: 0,
-                            autoAlpha: 1,
-                            duration: 0.5,
-                            stagger: 0.1,
-                        },
-                        "-=0.35"
+                        { y: 0, autoAlpha: 1, duration: 0.72 },
+                        "-=0.42"
                     );
 
                 gsap.fromTo(
@@ -273,28 +256,21 @@ const ServicesPage: React.FC = () => {
 
                     <div className="services-hero-overlay" />
 
-                    <div className="services-shell services-hero-content">
-                        <span className="services-hero-kicker">MFM Solutions</span>
+                    <div className="services-shell services-hero-layout">
+                        <div className="services-hero-content">
+                            <h1 className="services-hero-title">Services</h1>
 
-                        <h1 className="services-hero-title">
-                            Marketing solutions built to
-                            <span> move brands forward.</span>
-                        </h1>
-
-                        <p className="services-hero-description">
-                            Strategy, content, media, events and retail experiences —
-                            brought together in one integrated marketing partner.
-                        </p>
-
-                        <div className="services-hero-actions">
-                            <a href="#services" className="services-btn services-btn--primary">
-                                Explore services
-                                <FaArrowRight aria-hidden="true" />
-                            </a>
-
-                            <Link to="/contact" className="services-btn services-btn--secondary">
-                                Start a project
-                            </Link>
+                            <p className="services-hero-description">
+                                We are part of the Digital Marketing industry, our target
+                                market are the consumers inside the Egyptian territory,
+                                and our primary service line is showcasing the virtual
+                                side of the Egyptian shopping malls and Street markets in
+                                an interaction and integrated way. Important
+                                characteristics of this platform is to facilitate the
+                                information and news to the shopping malls’ customers and
+                                visitors before and during their engagement with the
+                                malls.
+                            </p>
                         </div>
                     </div>
                 </section>

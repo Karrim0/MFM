@@ -1,123 +1,218 @@
-import { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
-import { gsap } from 'gsap';
-import { Menu } from 'lucide-react';
-import '../styles/navnar.css';
-import logo from '../assets/images/لوجو/لوجو.webp';
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+
+import "../styles/navnar.css";
+import logo from "../assets/images/لوجو/لوجو.webp";
 
 interface NavLinkItem {
     to: string;
     label: string;
+    variant?: "default" | "cta";
 }
 
-const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState<boolean>(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-    const mobileMenuRef = useRef<HTMLDivElement>(null);
+const navLinks: NavLinkItem[] = [
+    { to: "/", label: "Home" },
+    { to: "/about", label: "About Us" },
+    { to: "/services", label: "Services" },
+    { to: "/events", label: "Events" },
+    { to: "/news", label: "News" },
+    { to: "/white-paper", label: "White Paper" },
+    { to: "/contact", label: "Contact", variant: "cta" },
+];
 
-    const navLinks: NavLinkItem[] = [
-        { to: '/', label: 'Home' },
-        { to: '/about', label: 'About Us' },
-        { to: '/services', label: 'Services' },
-        { to: '/events', label: 'Events' },
-        { to: '/news', label: 'News' },
-        { to: '/white-paper', label: 'White Paper' },
-        { to: '/contact', label: 'Contact' },
-    ];
+const Navbar = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const location = useLocation();
 
     useEffect(() => {
-        const handleScroll = (): void => {
-            setIsScrolled(window.scrollY > 50);
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        handleScroll();
+
+        window.addEventListener("scroll", handleScroll, {
+            passive: true,
+        });
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, []);
 
     useEffect(() => {
-        if (!mobileMenuRef.current) return;
+        setIsMobileMenuOpen(false);
+    }, [location.pathname]);
 
-        if (isMobileMenuOpen) {
-            gsap.to(mobileMenuRef.current, {
-                height: 'auto',
-                opacity: 1,
-                duration: 0.4,
-                ease: 'power2.out',
-            });
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        const handleResize = () => {
+            if (window.innerWidth > 992) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        const originalOverflow = document.body.style.overflow;
+
+        if (isMobileMenuOpen && window.innerWidth <= 992) {
+            document.body.style.overflow = "hidden";
         } else {
-            gsap.to(mobileMenuRef.current, {
-                height: 0,
-                opacity: 0,
-                duration: 0.3,
-                ease: 'power2.in',
-            });
+            document.body.style.overflow = originalOverflow;
         }
+
+        return () => {
+            document.body.style.overflow = originalOverflow;
+        };
     }, [isMobileMenuOpen]);
 
-    const toggleMobileMenu = (): void => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen((currentState) => !currentState);
     };
 
-    const closeMobileMenu = (): void => {
+    const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
     };
 
     return (
-        <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-            <div className="navbar-container">
-
-                {/* Logo Left */}
-                <div className="navbar-logo-container">
-                    <NavLink to="/">
-                        <img
-                            src={logo}
-                            alt="Logo"
-                            className="navbar-logo"
-                        />
-                    </NavLink>
-                </div>
-
-                {/* Desktop Links Right */}
-                <div className="navbar-links">
-                    {navLinks.map((link) => (
-                        <NavLink
-                            key={link.to}
-                            to={link.to}
-                            className={({ isActive }) =>
-                                `nav-link ${isActive ? 'active' : ''}`
-                            }
-                        >
-                            {link.label}
-                        </NavLink>
-                    ))}
-                </div>
-
-                {/* Mobile Toggle Button */}
-                <button
-                    className="mobile-menu-toggle"
-                    onClick={toggleMobileMenu}
-                    aria-label="Toggle mobile menu"
-                >
-                    <Menu size={26} color="#000000" />
-                </button>
-            </div>
-
-            {/* Mobile Menu */}
-            <div ref={mobileMenuRef} className="mobile-menu">
-                {navLinks.map((link) => (
+        <>
+            <header
+                className={`mfm-navbar${isScrolled ? " is-scrolled" : ""}`}
+            >
+                <div className="mfm-nav-container">
                     <NavLink
-                        key={link.to}
-                        to={link.to}
-                        className={({ isActive }) =>
-                            `mobile-nav-link ${isActive ? 'active' : ''}`
-                        }
+                        to="/"
+                        className="mfm-nav-brand"
+                        aria-label="MFM Egypt home"
                         onClick={closeMobileMenu}
                     >
-                        {link.label}
+                        <img
+                            src={logo}
+                            alt="MFM Egypt"
+                            className="mfm-nav-logo"
+                        />
                     </NavLink>
-                ))}
-            </div>
-        </nav>
+
+                    <nav
+                        className="mfm-desktop-navigation"
+                        aria-label="Main navigation"
+                    >
+                        {navLinks.map((link) => (
+                            <NavLink
+                                key={link.to}
+                                to={link.to}
+                                end={link.to === "/"}
+                                className={({ isActive }) => {
+                                    const classes = ["mfm-nav-link"];
+
+                                    if (isActive) {
+                                        classes.push("is-active");
+                                    }
+
+                                    if (link.variant === "cta") {
+                                        classes.push("mfm-nav-link--cta");
+                                    }
+
+                                    return classes.join(" ");
+                                }}
+                            >
+                                {link.label}
+                            </NavLink>
+                        ))}
+                    </nav>
+
+                    <button
+                        type="button"
+                        className="mfm-mobile-toggle"
+                        onClick={toggleMobileMenu}
+                        aria-label={
+                            isMobileMenuOpen
+                                ? "Close navigation menu"
+                                : "Open navigation menu"
+                        }
+                        aria-expanded={isMobileMenuOpen}
+                        aria-controls="mfm-mobile-navigation"
+                    >
+                        {isMobileMenuOpen ? (
+                            <X size={23} strokeWidth={2} />
+                        ) : (
+                            <Menu size={24} strokeWidth={2} />
+                        )}
+                    </button>
+                </div>
+
+                <div
+                    id="mfm-mobile-navigation"
+                    className={`mfm-mobile-menu${
+                        isMobileMenuOpen ? " is-open" : ""
+                    }`}
+                    aria-hidden={!isMobileMenuOpen}
+                >
+                    <div className="mfm-mobile-menu-clip">
+                        <nav
+                            className="mfm-mobile-menu-panel"
+                            aria-label="Mobile navigation"
+                        >
+                            {navLinks.map((link) => (
+                                <NavLink
+                                    key={link.to}
+                                    to={link.to}
+                                    end={link.to === "/"}
+                                    tabIndex={isMobileMenuOpen ? 0 : -1}
+                                    onClick={closeMobileMenu}
+                                    className={({ isActive }) => {
+                                        const classes = [
+                                            "mfm-mobile-nav-link",
+                                        ];
+
+                                        if (isActive) {
+                                            classes.push("is-active");
+                                        }
+
+                                        if (link.variant === "cta") {
+                                            classes.push(
+                                                "mfm-mobile-nav-link--cta"
+                                            );
+                                        }
+
+                                        return classes.join(" ");
+                                    }}
+                                >
+                                    <span>{link.label}</span>
+                                </NavLink>
+                            ))}
+                        </nav>
+                    </div>
+                </div>
+            </header>
+
+            <button
+                type="button"
+                className={`mfm-nav-backdrop${
+                    isMobileMenuOpen ? " is-open" : ""
+                }`}
+                onClick={closeMobileMenu}
+                aria-label="Close navigation menu"
+                tabIndex={isMobileMenuOpen ? 0 : -1}
+            />
+        </>
     );
 };
 

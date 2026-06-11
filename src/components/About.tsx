@@ -1,124 +1,143 @@
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import '../styles/about.css';
+import { ArrowRight } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// ✅ Import images from local assets
-import aboutImage1 from '../assets/images/about/abot1.jpg';
-import aboutImage2 from '../assets/images/about/about3.jpg';
-import aboutImage3 from '../assets/images/about/about2.jpg';
+import "../styles/about.css";
+
+import aboutImage1 from "../assets/images/about/abot1.jpg";
+import aboutImage2 from "../assets/images/about/about3.jpg";
+import aboutImage3 from "../assets/images/about/about2.jpg";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
-    const navigate = useNavigate(); // ✅ مهم
+    const sectionRef = useRef<HTMLElement>(null);
+    const navigate = useNavigate();
 
-    const textRef = useRef<HTMLDivElement>(null);
-    const imagesRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
+    useLayoutEffect(() => {
+        const context = gsap.context(() => {
+            const media = gsap.matchMedia();
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: textRef.current,
-                    start: 'top center+=100',
-                    toggleActions: 'play none none reverse',
-                },
+            media.add("(prefers-reduced-motion: no-preference)", () => {
+                gsap.fromTo(
+                    ".home-about-content > *",
+                    {
+                        y: 30,
+                        opacity: 0,
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        duration: 0.7,
+                        stagger: 0.1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: sectionRef.current,
+                            start: "top 75%",
+                        },
+                    }
+                );
+
+                gsap.fromTo(
+                    ".home-about-image-card",
+                    {
+                        y: 38,
+                        opacity: 0,
+                        scale: 0.97,
+                    },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.75,
+                        stagger: 0.12,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".home-about-gallery",
+                            start: "top 78%",
+                        },
+                    }
+                );
             });
 
-            tl.fromTo(
-                titleRef.current,
-                { opacity: 0, x: -50 },
-                { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }
-            );
+            return () => media.revert();
+        }, sectionRef);
 
-            tl.fromTo(
-                textRef.current,
-                { opacity: 0, x: -50 },
-                { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' },
-                '-=0.4'
-            );
-
-            gsap.fromTo(
-                '.about-image-wrapper',
-                { opacity: 0, x: 50 },
-                {
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    stagger: 0.2,
-                    scrollTrigger: {
-                        trigger: imagesRef.current,
-                        start: 'top center+=100',
-                        toggleActions: 'play none none reverse',
-                    },
-                }
-            );
-        });
-
-        return () => ctx.revert();
+        return () => context.revert();
     }, []);
 
     return (
-        <section className="about">
-            <div className="about-container">
+        <section
+            ref={sectionRef}
+            className="home-about"
+            aria-labelledby="home-about-title"
+        >
+            <div className="home-about-container">
+                <div className="home-about-content">
+                    <span className="home-about-kicker">
+                        About MFM Egypt
+                    </span>
 
-                {/* Text Section */}
-                <div ref={textRef} className="about-text">
-                    <h2 ref={titleRef} className="about-title">About Us</h2>
+                    <h2
+                        id="home-about-title"
+                        className="home-about-title"
+                    >
+                        About Us
+                    </h2>
 
-                    <p className="about-description">
-                        With over 40 years of excellence in marketing facility management,
-                        we have established ourselves as a leading integrated marketing
-                        communications and public relations firm across Egypt, Qatar,
-                        and KSA.
-                    </p>
-
-                    <p className="about-description">
-                        With over 40 years of excellence in marketing facility management,
-                        we have established ourselves as a leading integrated marketing
-                        communications and public relations firm across Egypt, Qatar,
-                        and KSA.
+                    <p className="home-about-description">
+                        With over 40 years of excellence in marketing facility
+                        management, we have established ourselves as a leading
+                        integrated marketing communications and public relations
+                        firm across Egypt, Qatar, and KSA.
                     </p>
 
                     <button
-                        className="about-button"
+                        type="button"
+                        className="home-about-button"
                         onClick={() => navigate("/about")}
                     >
                         Learn More
+                        <ArrowRight size={18} aria-hidden="true" />
                     </button>
                 </div>
 
-                {/* Images Section */}
-                <div ref={imagesRef} className="about-images">
-
-                    <div className="about-image-wrapper">
+                <div
+                    className="home-about-gallery"
+                    aria-label="MFM projects and activities"
+                >
+                    <figure className="home-about-image-card home-about-image-card--main">
                         <img
                             src={aboutImage1}
-                            alt="About Us 1"
-                            className="about-image"
+                            alt="MFM marketing activity"
+                            className="home-about-image"
                         />
-                    </div>
 
-                    <div className="about-image-wrapper">
+                        <div className="home-about-image-overlay" />
+
+                        <figcaption className="home-about-experience">
+                            <strong>40+</strong>
+                            <span>Years of experience</span>
+                        </figcaption>
+                    </figure>
+
+                    <figure className="home-about-image-card">
                         <img
                             src={aboutImage2}
-                            alt="About Us 2"
-                            className="about-image"
+                            alt="MFM event and audience experience"
+                            className="home-about-image"
                         />
-                    </div>
+                    </figure>
 
-                    <div className="about-image-wrapper">
+                    <figure className="home-about-image-card">
                         <img
                             src={aboutImage3}
-                            alt="About Us 3"
-                            className="about-image"
+                            alt="MFM integrated marketing project"
+                            className="home-about-image"
                         />
-                    </div>
-
+                    </figure>
                 </div>
             </div>
         </section>
