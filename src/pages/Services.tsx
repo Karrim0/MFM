@@ -1,208 +1,472 @@
-import React, { useEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import "../styles/ServicesPage.css";
+import type { IconType } from "react-icons";
+import {
+    FaAd,
+    FaArrowRight,
+    FaAward,
+    FaBuilding,
+    FaCalendarCheck,
+    FaCheckCircle,
+    FaClipboardCheck,
+    FaConciergeBell,
+    FaFilm,
+    FaGift,
+    FaHandshake,
+    FaHashtag,
+    FaPenNib,
+    FaPrint,
+    FaSearch,
+    FaSeedling,
+    FaStoreAlt,
+    FaTools,
+    FaUsers,
+    FaUsersCog,
+    FaVideo,
+} from "react-icons/fa";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import Footer from "../components/Footer";
+import "../styles/ServicesPage.css";
 
-import certificate from "../assets/images/RECOGNITION_MFM (1)_page-0001.jpg"; // عدّل المسار حسب مكان الصورة عندك
-
+import certificate from "../assets/images/RECOGNITION_MFM (1)_page-0001.jpg";
 import about1 from "../assets/images/projects/project2.jpeg";
 import about2 from "../assets/images/projects/project6.jpeg";
 import about3 from "../assets/images/projects/project7.jpeg";
 import about4 from "../assets/images/projects/project1.jpeg";
 
-
-import {
-    FaAd,
-    FaHandshake,
-    FaUsersCog,
-    FaSeedling,
-    FaVideo,
-    FaHashtag,
-    FaCalendarCheck,
-    FaStoreAlt,
-    FaConciergeBell,
-    FaSearch,
-    FaGift,
-    FaFilm,
-    FaTools,
-    FaPenNib,
-    FaPrint,
-    FaClipboardCheck,
-    FaBuilding,
-    FaAward,
-    FaUsers,
-} from "react-icons/fa";
-
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
 interface Service {
     title: string;
-    icon: React.ReactNode;
+    description: string;
+    icon: IconType;
     path?: string;
 }
 
 const services: Service[] = [
-    { title: "Advertising & Rights sales", icon: <FaAd /> },
-    { title: "Business Unit & Employee Engagement", icon: <FaUsersCog /> },
-    { title: "Community & Grassroots Programs", icon: <FaSeedling /> },
-    { title: "Content Production & Distribution", icon: <FaVideo /> },
-    { title: "CSR", icon: <FaHandshake /> },
-    { title: "Digital Marketing & Social Media", icon: <FaHashtag /> },
-    { title: "Event Creation, Management", icon: <FaCalendarCheck /> },
-    { title: "Exhibitions & Retail Display", icon: <FaStoreAlt /> },
-    { title: "Hospitality Services", icon: <FaConciergeBell /> },
     {
-        title: "Media Monitoring Service",
-        icon: <FaSearch />,
+        title: "Advertising & Rights Sales",
+        description: "Commercial strategies that maximize media, advertising and sponsorship assets.",
+        icon: FaAd,
+    },
+    {
+        title: "Employee Engagement",
+        description: "Internal campaigns that strengthen culture, communication and participation.",
+        icon: FaUsersCog,
+    },
+    {
+        title: "Community Programs",
+        description: "Local initiatives that build authentic connections with communities.",
+        icon: FaSeedling,
+    },
+    {
+        title: "Content Production",
+        description: "Creative content planned and produced for the right channels and audiences.",
+        icon: FaVideo,
+    },
+    {
+        title: "Corporate Social Responsibility",
+        description: "Purpose-led programs that create social value and strengthen reputation.",
+        icon: FaHandshake,
+    },
+    {
+        title: "Digital & Social Media",
+        description: "Integrated campaigns focused on reach, engagement and measurable growth.",
+        icon: FaHashtag,
+    },
+    {
+        title: "Event Management",
+        description: "End-to-end event planning, production and audience-experience management.",
+        icon: FaCalendarCheck,
+    },
+    {
+        title: "Exhibitions & Retail Display",
+        description: "Exhibition stands and retail displays designed for stronger brand visibility.",
+        icon: FaStoreAlt,
+    },
+    {
+        title: "Hospitality Services",
+        description: "Professional guest management for events, activations and corporate occasions.",
+        icon: FaConciergeBell,
+    },
+    {
+        title: "Media Monitoring",
+        description: "Real-time tracking, reporting and insights that support smarter decisions.",
+        icon: FaSearch,
         path: "/media-monitoring",
     },
-    { title: "Merchandise and Giveaways", icon: <FaGift /> },
-    { title: "MOVIE and Entertainment Placement", icon: <FaFilm /> },
-    { title: "Overlay, Fit out & showcasing", icon: <FaTools /> },
-    { title: "Public Relations Writing", icon: <FaPenNib /> },
-    { title: "Publishing and Printing production", icon: <FaPrint /> },
-    { title: "Retail Executions Monitoring", icon: <FaClipboardCheck /> },
-    { title: "Shopping centres Service", icon: <FaBuilding /> },
-    { title: "Sponsorship Activation & Rights Management", icon: <FaAward /> },
     {
-        title: "Influencers Marketing Campaigns",
-        icon: <FaUsers />,
-        path: "/influencers-marketing"
+        title: "Merchandise & Giveaways",
+        description: "Branded promotional products developed for memorable campaigns.",
+        icon: FaGift,
+    },
+    {
+        title: "Entertainment Placement",
+        description: "Strategic brand placement within entertainment content and experiences.",
+        icon: FaFilm,
+    },
+    {
+        title: "Overlay, Fit-out & Showcasing",
+        description: "Complete fit-out and showcasing solutions for branded spaces and venues.",
+        icon: FaTools,
+    },
+    {
+        title: "Public Relations Writing",
+        description: "Clear, credible and audience-focused communication for organizations.",
+        icon: FaPenNib,
+    },
+    {
+        title: "Publishing & Printing",
+        description: "Professional production of publications and marketing collateral.",
+        icon: FaPrint,
+    },
+    {
+        title: "Retail Execution Monitoring",
+        description: "On-ground monitoring that protects quality and campaign consistency.",
+        icon: FaClipboardCheck,
+    },
+    {
+        title: "Shopping Centres Services",
+        description: "Specialized marketing support created for shopping-centre environments.",
+        icon: FaBuilding,
+    },
+    {
+        title: "Sponsorship Activation",
+        description: "Programs that transform sponsorship rights into audience engagement.",
+        icon: FaAward,
+    },
+    {
+        title: "Influencer Marketing",
+        description: "Creator-led campaigns built around relevance and measurable performance.",
+        icon: FaUsers,
+        path: "/influencers-marketing",
     },
 ];
 
 const ServicesPage: React.FC = () => {
-    const pageRef = useRef<HTMLDivElement>(null);
+    const pageRef = useRef<HTMLElement>(null);
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
+    useLayoutEffect(() => {
+        const media = gsap.matchMedia();
 
-            /* ================= HERO ================= */
+        const context = gsap.context(() => {
+            media.add("(prefers-reduced-motion: no-preference)", () => {
+                gsap
+                    .timeline({ defaults: { ease: "power3.out" } })
+                    .fromTo(
+                        ".services-hero-kicker",
+                        { y: 18, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.55 }
+                    )
+                    .fromTo(
+                        ".services-hero-title",
+                        { y: 42, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.85 },
+                        "-=0.25"
+                    )
+                    .fromTo(
+                        ".services-hero-description",
+                        { y: 24, autoAlpha: 0 },
+                        { y: 0, autoAlpha: 1, duration: 0.7 },
+                        "-=0.45"
+                    )
+                    .fromTo(
+                        ".services-hero-actions > *",
+                        { y: 18, autoAlpha: 0 },
+                        {
+                            y: 0,
+                            autoAlpha: 1,
+                            duration: 0.5,
+                            stagger: 0.1,
+                        },
+                        "-=0.35"
+                    );
 
-            const heroTl = gsap.timeline();
-
-            heroTl
-                .fromTo(
-                    ".services-hero-content h1",
-                    { y: 80, scale: 0.95, autoAlpha: 0 },
-                    { y: 0, scale: 1, autoAlpha: 1, duration: 1.4, ease: "expo.out" }
-                )
-                .fromTo(
-                    ".services-hero-content p",
-                    { y: 40, autoAlpha: 0 },
-                    { y: 0, autoAlpha: 1, duration: 1.2, ease: "power2.out" },
-                    "-=0.8"
+                gsap.fromTo(
+                    ".services-gallery-card",
+                    { y: 36, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.7,
+                        stagger: 0.1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".services-story-section",
+                            start: "top 75%",
+                        },
+                    }
                 );
 
-            /* ================= SECTION 2 ================= */
+                gsap.fromTo(
+                    ".services-story-copy > *",
+                    { y: 28, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.65,
+                        stagger: 0.08,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".services-story-copy",
+                            start: "top 78%",
+                        },
+                    }
+                );
 
-            const sectionTl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: ".services-content-section",
-                    start: "top 75%",
-                    toggleActions: "play none none none",
-                },
+                gsap.fromTo(
+                    ".services-card",
+                    { y: 32, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.55,
+                        stagger: 0.045,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".services-grid",
+                            start: "top 82%",
+                        },
+                    }
+                );
+
+                gsap.fromTo(
+                    ".services-certificate-card",
+                    { y: 34, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: ".services-certificate-section",
+                            start: "top 80%",
+                        },
+                    }
+                );
             });
-
-            sectionTl.fromTo(
-                ".services-image-grid",
-                { x: -120, autoAlpha: 0 },
-                { x: 0, autoAlpha: 1, duration: 1.4, ease: "power3.out" }
-            );
-
-            sectionTl.fromTo(
-                ".services-text-content",
-                { x: 120, autoAlpha: 0 },
-                { x: 0, autoAlpha: 1, duration: 1.4, ease: "power3.out" },
-                "-=1.1"
-            );
-
         }, pageRef);
 
-        return () => ctx.revert();
+        return () => {
+            media.revert();
+            context.revert();
+        };
     }, []);
 
     return (
         <>
-            <div className="services-page" ref={pageRef}>
-
-                {/* HERO */}
+            <main className="services-page" ref={pageRef}>
                 <section className="services-hero-section">
-                    <video autoPlay muted loop playsInline className="services-hero-video">
+                    <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        className="services-hero-video"
+                        aria-hidden="true"
+                    >
                         <source src="/video/back.mp4" type="video/mp4" />
                     </video>
 
-                    <div className="services-overlay" />
+                    <div className="services-hero-overlay" />
 
-                    <div className="services-hero-content">
-                        <h1>Services</h1>
-                        <p>
-                            We are part of the Digital Marketing industry, our target market are the consumers inside the Egyptian territory, and our primary service line is showcasing the virtual side of the Egyptian shopping malls and Street markets in an interaction and integrated way.
-                            Important characteristics of this platform is to facilitate the information and news to the shopping malls’ customers and visitors before and during their engagement with the malls.
+                    <div className="services-shell services-hero-content">
+                        <span className="services-hero-kicker">MFM Solutions</span>
 
+                        <h1 className="services-hero-title">
+                            Marketing solutions built to
+                            <span> move brands forward.</span>
+                        </h1>
+
+                        <p className="services-hero-description">
+                            Strategy, content, media, events and retail experiences —
+                            brought together in one integrated marketing partner.
                         </p>
+
+                        <div className="services-hero-actions">
+                            <a href="#services" className="services-btn services-btn--primary">
+                                Explore services
+                                <FaArrowRight aria-hidden="true" />
+                            </a>
+
+                            <Link to="/contact" className="services-btn services-btn--secondary">
+                                Start a project
+                            </Link>
+                        </div>
                     </div>
                 </section>
 
-                {/* CONTENT */}
-                <section className="services-content-section">
-                    <div className="services-content-grid">
-                        <div className="services-image-grid">
-                            <img src={about1} alt="" />
-                            <img src={about2} alt="" />
-                            <img src={about3} alt="" />
-                            <img src={about4} alt="" />
+                <section className="services-story-section">
+                    <div className="services-shell services-story-grid">
+                        <div className="services-gallery">
+                            <figure className="services-gallery-card services-gallery-card--large">
+                                <img src={about1} alt="MFM exhibition and live activation" />
+                                <figcaption>Live brand activations</figcaption>
+                            </figure>
+
+                            <figure className="services-gallery-card">
+                                <img src={about2} alt="MFM conference and event production" />
+                            </figure>
+
+                            <figure className="services-gallery-card">
+                                <img src={about3} alt="MFM corporate event experience" />
+                            </figure>
+
+                            <figure className="services-gallery-card services-gallery-card--wide">
+                                <img src={about4} alt="MFM retail and audience engagement project" />
+                                <figcaption>Retail experiences</figcaption>
+                            </figure>
                         </div>
 
-                        <div className="services-text-content">
-                            <h2>Writing remains the key to public relations</h2>
-                            <p className="services-intro">
-                                The Shopping Centers and retail industry in Egypt has expanded rapidly in the past several years and growth is expected to continue at a strong pace for the foreseeable future. This offers excellent opportunities for new business ideas to enter this market. So, we intend to address the needs of retail customers in this market who seek to reach out and create an awareness with their targeted audiences. And we will address this need by providing an All-in-One Digital Platform, will name it MSJ (Mall’s Street Journal)
-                                <br /> <br />
-                                The mission of our new business is to produce services that deliver superior value, offer outstanding real-time information, provide highly personalized shopping solutions, specifically designed and individually tailored for the needs of each customer, for a specific market niche.
-                                And to build a brand name franchise, that will lead their markets, as the most innovative in the marketing and retail shopping industry.
-                                <br /> <br />
-                                We intend to fulfill this mission by giving extra effort to Customer Service, Direct Sales, Content production and Management, research, superior workmanship, customer satisfaction, and addressing customer needs (Mall Management, Retail Sector, and Shoppers)
+                        <div className="services-story-copy">
+                            <span className="services-section-kicker">What we do</span>
+
+                            <h2>
+                                One team from strategy to execution.
+                            </h2>
+
+                            <p className="services-story-lead">
+                                We help brands connect physical spaces, digital channels
+                                and real audiences through clear strategy and reliable
+                                execution.
                             </p>
+
+                            <p>
+                                Our work supports shopping centres, retailers and
+                                organizations with content, campaigns, events, media
+                                intelligence and customer experiences that feel
+                                consistent at every touchpoint.
+                            </p>
+
+                            <ul className="services-story-points">
+                                <li>
+                                    <FaCheckCircle aria-hidden="true" />
+                                    Integrated retail and mall marketing
+                                </li>
+                                <li>
+                                    <FaCheckCircle aria-hidden="true" />
+                                    End-to-end content and campaign execution
+                                </li>
+                                <li>
+                                    <FaCheckCircle aria-hidden="true" />
+                                    Monitoring, reporting and actionable insights
+                                </li>
+                            </ul>
+
+                            <div className="services-stats">
+                                <div>
+                                    <strong>{services.length}</strong>
+                                    <span>Specialized services</span>
+                                </div>
+                                <div>
+                                    <strong>360°</strong>
+                                    <span>Integrated execution</span>
+                                </div>
+                                <div>
+                                    <strong>1</strong>
+                                    <span>Strategic partner</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* SERVICES */}
-                <section className="services-our-services">
-                    <h2 className="services-sectionservices-title">Our Services</h2>
-                    <div className="services-grid">
-                        {services.map((service, index) =>
-                            service.path ? (
-                                <Link
-                                    key={index}
-                                    to={service.path}
-                                    className="services-card"
-                                >
-                                    <div className="services-icon-circle">{service.icon}</div>
-                                    <h3>{service.title}</h3>
-                                </Link>
-                            ) : (
-                                <div key={index} className="services-card">
-                                    <div className="services-icon-circle">{service.icon}</div>
-                                    <h3>{service.title}</h3>
-                                </div>
-                            )
-                        )}
+                <section id="services" className="services-our-services">
+                    <div className="services-shell">
+                        <header className="services-section-heading">
+                            <span className="services-section-kicker">Our capabilities</span>
+                            <h2>Services shaped around your objectives.</h2>
+                            <p>
+                                Choose one focused service or combine several into a
+                                complete marketing solution.
+                            </p>
+                        </header>
+
+                        <div className="services-grid">
+                            {services.map((service, index) => {
+                                const Icon = service.icon;
+
+                                const content = (
+                                    <>
+                                        <div className="services-card-header">
+                                            <span className="services-icon-box">
+                                                <Icon aria-hidden="true" />
+                                            </span>
+
+                                            <span className="services-card-number">
+                                                {String(index + 1).padStart(2, "0")}
+                                            </span>
+                                        </div>
+
+                                        <h3>{service.title}</h3>
+                                        <p>{service.description}</p>
+
+                                        {service.path && (
+                                            <span className="services-card-link-label">
+                                                View service
+                                                <FaArrowRight aria-hidden="true" />
+                                            </span>
+                                        )}
+                                    </>
+                                );
+
+                                return service.path ? (
+                                    <Link
+                                        key={service.title}
+                                        to={service.path}
+                                        className="services-card services-card--linked"
+                                    >
+                                        {content}
+                                    </Link>
+                                ) : (
+                                    <article key={service.title} className="services-card">
+                                        {content}
+                                    </article>
+                                );
+                            })}
+                        </div>
                     </div>
                 </section>
 
-                {/* CENTER VIDEO */}
                 <section className="services-certificate-section">
-                    <div className="services-certificate-wrapper">
-                        <img src={certificate} alt="Company Certificate" />
+                    <div className="services-shell">
+                        <div className="services-certificate-card">
+                            <div className="services-certificate-copy">
+                                <span className="services-certificate-icon">
+                                    <FaAward aria-hidden="true" />
+                                </span>
+
+                                <span className="services-section-kicker">Recognition</span>
+
+                                <h2>Professional work recognized by trusted partners.</h2>
+
+                                <p>
+                                    This recognition reflects the consistency, attention
+                                    to detail and quality standards behind our campaigns
+                                    and client experiences.
+                                </p>
+                            </div>
+
+                            <a
+                                href={certificate}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="services-certificate-image"
+                                aria-label="Open MFM recognition certificate"
+                            >
+                                <img
+                                    src={certificate}
+                                    alt="MFM company recognition certificate"
+                                />
+                                <span>View certificate</span>
+                            </a>
+                        </div>
                     </div>
                 </section>
-
-            </div>
+            </main>
 
             <Footer />
         </>
@@ -210,4 +474,3 @@ const ServicesPage: React.FC = () => {
 };
 
 export default ServicesPage;
-

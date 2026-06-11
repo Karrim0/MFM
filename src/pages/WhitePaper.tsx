@@ -211,22 +211,36 @@ export default function WhitePaper() {
     return (
         <main className="wp-page">
             {/* Hero */}
-            <section className={`wp-hero${heroVisible ? ' wp-hero--visible' : ''}`} ref={heroRef}>
-                <div className="wp-hero__overlay" />
-                <div className="wp-hero__content">
-                    <span className="wp-hero__eyebrow">MFM Marketing</span>
-                    <h1 className="wp-hero__title">White Papers</h1>
-                    <p className="wp-hero__subtitle">
-                        Explore our latest research and comprehensive guides on digital marketing and branding. Valuable insights to develop effective marketing strategies.
-                    </p>
-                    <div className="wp-hero__divider" />
-                </div>
-                <div className="wp-hero__shapes">
-                    <div className="wp-hero__shape wp-hero__shape--1" />
-                    <div className="wp-hero__shape wp-hero__shape--2" />
-                    <div className="wp-hero__shape wp-hero__shape--3" />
-                </div>
-            </section>
+            <section
+    className={`wp-hero${heroVisible ? ' wp-hero--visible' : ''}`}
+    ref={heroRef}
+>
+    <div className="wp-hero__overlay" />
+
+    <div className="wp-hero__shapes" aria-hidden="true">
+        <div className="wp-hero__shape wp-hero__shape--1" />
+        <div className="wp-hero__shape wp-hero__shape--2" />
+        <div className="wp-hero__shape wp-hero__shape--3" />
+    </div>
+
+    <div className="wp-hero__content">
+        <span className="wp-hero__eyebrow">
+            MFM Insights
+        </span>
+
+        <h1 className="wp-hero__title">
+            White Papers
+            <span> & Marketing Insights</span>
+        </h1>
+
+        <p className="wp-hero__subtitle">
+            Explore research-driven insights, practical guides and industry
+            perspectives designed to help brands make smarter marketing decisions.
+        </p>
+
+        <div className="wp-hero__divider" />
+    </div>
+</section>
 
             {/* Featured */}
             <section className="wp-section">
