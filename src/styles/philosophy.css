@@ -1,381 +1,355 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 .home-philosophy {
-    position: relative;
-    isolation: isolate;
+  position: relative;
+  isolation: isolate;
 
-    padding: 105px 0;
-    overflow: hidden;
+  padding: 105px 0;
+  overflow: hidden;
 
-    background: #f5f8f9;
-    color: #15262d;
+  background: #fff;
+  color: #15262d;
 
-    font-family: "Poppins", "Helvetica", "Arial", sans-serif;
+  font-family: "Poppins", "Helvetica", "Arial", sans-serif;
 }
 
 .home-philosophy,
 .home-philosophy *,
 .home-philosophy *::before,
 .home-philosophy *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 /* ================= BACKGROUND ================= */
 
 .home-philosophy-background {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
 
-    pointer-events: none;
-
-    background:
-        radial-gradient(
-            circle at 5% 15%,
-            rgba(1, 123, 141, 0.09),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 95% 90%,
-            rgba(1, 123, 141, 0.06),
-            transparent 28%
-        );
+  pointer-events: none;
 }
 
 .home-philosophy-background::after {
-    content: "";
+  content: "";
 
-    position: absolute;
-    inset: 0;
+  position: absolute;
+  inset: 0;
 
-    opacity: 0.42;
+  opacity: 0.42;
 
-    background-image:
-        linear-gradient(
-            rgba(1, 123, 141, 0.025) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(1, 123, 141, 0.025) 1px,
-            transparent 1px
-        );
+  background-image:
+    linear-gradient(rgba(1, 123, 141, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(1, 123, 141, 0.025) 1px, transparent 1px);
 
-    background-size: 55px 55px;
+  background-size: 55px 55px;
 }
 
 /* ================= CONTAINER ================= */
 
 .home-philosophy-container {
-     width: min(
-        var(--mfm-layout-width),
-        calc(100% - var(--mfm-layout-gutter))
-    );
-    margin-inline: auto;
+  width: min(var(--mfm-layout-width), calc(100% - var(--mfm-layout-gutter)));
+  margin-inline: auto;
 }
 
 /* ================= CARDS ================= */
 
 .home-philosophy-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .home-philosophy-card {
-    position: relative;
+  position: relative;
 
-    display: flex;
-    min-width: 0;
-    min-height: 430px;
-    flex-direction: column;
+  display: flex;
+  min-width: 0;
+  min-height: 430px;
+  flex-direction: column;
 
-    padding: 32px 30px;
+  padding: 32px 30px;
 
-    overflow: hidden;
+  overflow: hidden;
 
-    border: 1px solid rgba(21, 38, 45, 0.09);
-    border-radius: 20px;
+  border: 1px solid rgba(21, 38, 45, 0.09);
+  border-radius: 20px;
 
-    background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.94);
 
-    box-shadow: 0 12px 35px rgba(17, 70, 78, 0.07);
+  box-shadow: 0 12px 35px rgba(17, 70, 78, 0.07);
 
-    transition:
-        transform 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease;
+  transition:
+    transform 0.35s ease,
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 .home-philosophy-card::before {
-    content: "";
+  content: "";
 
-    position: absolute;
-    top: 0;
-    left: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
 
-    width: 100%;
-    height: 3px;
+  width: 100%;
+  height: 3px;
 
-    background: linear-gradient(
-        90deg,
-        #017b8d,
-        #78d4df
-    );
+  background: linear-gradient(90deg, #017b8d, #78d4df);
 
-    transform: scaleX(0);
-    transform-origin: left center;
+  transform: scaleX(0);
+  transform-origin: left center;
 
-    transition: transform 0.4s ease;
+  transition: transform 0.4s ease;
 }
 
 .home-philosophy-card::after {
-    content: "";
+  content: "";
 
-    position: absolute;
-    right: -80px;
-    bottom: -95px;
+  position: absolute;
+  right: -80px;
+  bottom: -95px;
 
-    width: 190px;
-    height: 190px;
+  width: 190px;
+  height: 190px;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    background: rgba(1, 123, 141, 0.045);
+  background: rgba(1, 123, 141, 0.045);
 
-    transition: transform 0.5s ease;
+  transition: transform 0.5s ease;
 }
 
 .home-philosophy-card:hover {
-    border-color: rgba(1, 123, 141, 0.22);
+  border-color: rgba(1, 123, 141, 0.22);
 
-    box-shadow: 0 22px 52px rgba(12, 78, 87, 0.13);
+  box-shadow: 0 22px 52px rgba(12, 78, 87, 0.13);
 
-    transform: translateY(-7px);
+  transform: translateY(-7px);
 }
 
 .home-philosophy-card:hover::before {
-    transform: scaleX(1);
+  transform: scaleX(1);
 }
 
 .home-philosophy-card:hover::after {
-    transform: scale(1.25);
+  transform: scale(1.25);
 }
 
 /* ================= NUMBER ================= */
 
 .home-philosophy-number {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 
-    color: rgba(1, 123, 141, 0.16);
+  color: rgba(1, 123, 141, 0.16);
 
-    font-size: clamp(3.5rem, 5vw, 5rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.06em;
+  font-size: clamp(3.5rem, 5vw, 5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
 
-    transition:
-        color 0.35s ease,
-        transform 0.35s ease;
+  transition:
+    color 0.35s ease,
+    transform 0.35s ease;
 }
 
 .home-philosophy-card:hover .home-philosophy-number {
-    color: rgba(1, 123, 141, 0.28);
-    transform: translateX(4px);
+  color: rgba(1, 123, 141, 0.28);
+  transform: translateX(4px);
 }
 
 .home-philosophy-divider {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 
-    width: 42px;
-    height: 3px;
-    margin-top: 25px;
+  width: 42px;
+  height: 3px;
+  margin-top: 25px;
 
-    border-radius: 999px;
+  border-radius: 999px;
 
-    background: #017b8d;
+  background: #017b8d;
 }
 
 /* ================= TEXT ================= */
 
 .home-philosophy-title {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 
-    margin: 27px 0 0;
+  margin: 27px 0 0;
 
-    color: #15262d;
+  color: #017b8d;
 
-    font-size: clamp(1.35rem, 2vw, 1.7rem);
-    font-weight: 650;
-    line-height: 1.35;
-    letter-spacing: -0.025em;
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
 }
 
 .home-philosophy-description {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 
-    margin: 17px 0 0;
+  margin: 17px 0 0;
 
-    color: #5b6a70;
+  color: #5b6a70;
 
-    font-size: 0.89rem;
-    font-weight: 400;
-    line-height: 1.85;
+  font-size: 0.89rem;
+  font-weight: 400;
+  line-height: 1.85;
 }
 
 /* ================= CTA ================= */
 
 .home-philosophy-cta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
 
-    width: fit-content;
-    min-height: 58px;
+  width: fit-content;
+  min-height: 58px;
 
-    margin: 42px auto 0;
-    padding: 7px 24px 7px 8px;
+  margin: 42px auto 0;
+  padding: 7px 24px 7px 8px;
 
-    border: 1px solid rgba(1, 123, 141, 0.15);
-    border-radius: 999px;
+  border: 1px solid rgba(1, 123, 141, 0.15);
+  border-radius: 999px;
 
-    background: #ffffff;
-    color: #244047;
+  background: #ffffff;
+  color: #244047;
 
-    font-family: inherit;
-    font-size: 0.88rem;
-    font-weight: 600;
-    line-height: 1.5;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.5;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    box-shadow: 0 12px 30px rgba(12, 75, 84, 0.1);
+  box-shadow: 0 12px 30px rgba(12, 75, 84, 0.1);
 
-    transition:
-        transform 0.3s ease,
-        border-color 0.3s ease,
-        color 0.3s ease,
-        box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .home-philosophy-cta-icon {
-    display: grid;
+  display: grid;
 
-    width: 44px;
-    height: 44px;
-    flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
 
-    place-items: center;
+  place-items: center;
 
-    border-radius: 50%;
+  border-radius: 50%;
 
-    background: #017b8d;
-    color: #ffffff;
+  background: #017b8d;
+  color: #ffffff;
 
-    transition:
-        background-color 0.3s ease,
-        transform 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
 }
 
 .home-philosophy-cta:hover {
-    border-color: rgba(1, 123, 141, 0.3);
-    color: #017b8d;
+  border-color: rgba(1, 123, 141, 0.3);
+  color: #017b8d;
 
-    box-shadow: 0 17px 38px rgba(12, 75, 84, 0.16);
+  box-shadow: 0 17px 38px rgba(12, 75, 84, 0.16);
 
-    transform: translateY(-3px);
+  transform: translateY(-3px);
 }
 
 .home-philosophy-cta:hover .home-philosophy-cta-icon {
-    background: #005d6a;
-    transform: rotate(-7deg);
+  background: #005d6a;
+  transform: rotate(-7deg);
 }
 
 .home-philosophy-cta:focus-visible {
-    outline: 3px solid rgba(1, 123, 141, 0.24);
-    outline-offset: 4px;
+  outline: 3px solid rgba(1, 123, 141, 0.24);
+  outline-offset: 4px;
 }
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 960px) {
-    .home-philosophy {
-        padding-block: 85px;
-    }
+  .home-philosophy {
+    padding-block: 85px;
+  }
 
-    .home-philosophy-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
+  .home-philosophy-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 
-    .home-philosophy-card {
-        min-height: 0;
-        padding: 30px;
-    }
+  .home-philosophy-card {
+    min-height: 0;
+    padding: 30px;
+  }
 
-    .home-philosophy-number {
-        font-size: 3.7rem;
-    }
+  .home-philosophy-number {
+    font-size: 3.7rem;
+  }
 
-    .home-philosophy-description {
-        max-width: 760px;
-    }
+  .home-philosophy-description {
+    max-width: 760px;
+  }
 }
 
 @media (max-width: 620px) {
-    .home-philosophy {
-        padding-block: 70px;
-    }
+  .home-philosophy {
+    padding-block: 70px;
+  }
 
-    .home-philosophy-container {
-        width: min(100% - 30px, 1180px);
-    }
+  .home-philosophy-container {
+    width: min(100% - 30px, 1180px);
+  }
 
-    .home-philosophy-card {
-        padding: 25px 22px;
-        border-radius: 16px;
-    }
+  .home-philosophy-card {
+    padding: 25px 22px;
+    border-radius: 16px;
+  }
 
-    .home-philosophy-number {
-        font-size: 3.2rem;
-    }
+  .home-philosophy-number {
+    font-size: 3.2rem;
+  }
 
-    .home-philosophy-divider {
-        margin-top: 20px;
-    }
+  .home-philosophy-divider {
+    margin-top: 20px;
+  }
 
-    .home-philosophy-title {
-        margin-top: 22px;
-        font-size: 1.3rem;
-    }
+  .home-philosophy-title {
+    margin-top: 22px;
+    font-size: 1.3rem;
+  }
 
-    .home-philosophy-description {
-        margin-top: 14px;
-        font-size: 0.84rem;
-        line-height: 1.75;
-    }
+  .home-philosophy-description {
+    margin-top: 14px;
+    font-size: 0.84rem;
+    line-height: 1.75;
+  }
 
-    .home-philosophy-cta {
-        width: 100%;
-        margin-top: 32px;
-        padding-right: 16px;
+  .home-philosophy-cta {
+    width: 100%;
+    margin-top: 32px;
+    padding-right: 16px;
 
-        font-size: 0.8rem;
-        text-align: left;
-    }
+    font-size: 0.8rem;
+    text-align: left;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .home-philosophy *,
-    .home-philosophy *::before,
-    .home-philosophy *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+  .home-philosophy *,
+  .home-philosophy *::before,
+  .home-philosophy *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -23,7 +23,7 @@ interface EventType {
   title: string;
   description: string;
   date: string;
-  isoDate: string;
+  isoDate?: string | null;
   location: string;
   image?: string;
   logo?: string;
@@ -54,29 +54,37 @@ const calculateTimeLeft = (targetDate: string): TimeLeft => {
 
   return {
     days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-    hours: Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) /
-        (1000 * 60 * 60),
-    ),
-    minutes: Math.floor(
-      (distance % (1000 * 60 * 60)) /
-        (1000 * 60),
-    ),
-    seconds: Math.floor(
-      (distance % (1000 * 60)) / 1000,
-    ),
+    hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((distance % (1000 * 60)) / 1000),
     expired: false,
   };
 };
 
 const padNumber = (value: number) => String(value).padStart(2, "0");
 
-const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
+const CountdownTimer = ({
+  targetDate,
+}: {
+  targetDate?: string | null;
+}) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
-    calculateTimeLeft(targetDate),
+    targetDate
+      ? calculateTimeLeft(targetDate)
+      : {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          expired: false,
+        },
   );
 
   useLayoutEffect(() => {
+    if (!targetDate) {
+      return;
+    }
+
     const updateTimer = () => {
       setTimeLeft(calculateTimeLeft(targetDate));
     };
@@ -90,6 +98,36 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
     };
   }, [targetDate]);
 
+  if (!targetDate) {
+    const placeholderItems = [
+      "Days",
+      "Hours",
+      "Minutes",
+      "Seconds",
+    ];
+
+    return (
+      <div className="events-countdown-placeholder">
+        <div
+          className="events-countdown"
+          aria-label="Event date will be announced soon"
+        >
+          {placeholderItems.map((label) => (
+            <div
+              key={label}
+              className="events-countdown-item"
+            >
+              <strong>--</strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+
+        <p>Event date will be announced soon</p>
+      </div>
+    );
+  }
+
   if (timeLeft.expired) {
     return (
       <div className="events-countdown-expired" role="status">
@@ -99,22 +137,10 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
   }
 
   const countdownItems = [
-    {
-      value: timeLeft.days,
-      label: "Days",
-    },
-    {
-      value: timeLeft.hours,
-      label: "Hours",
-    },
-    {
-      value: timeLeft.minutes,
-      label: "Minutes",
-    },
-    {
-      value: timeLeft.seconds,
-      label: "Seconds",
-    },
+    { value: timeLeft.days, label: "Days" },
+    { value: timeLeft.hours, label: "Hours" },
+    { value: timeLeft.minutes, label: "Minutes" },
+    { value: timeLeft.seconds, label: "Seconds" },
   ];
 
   return (
@@ -147,8 +173,8 @@ const EventsPage = () => {
     title: "Innovation Event 2026",
     description:
       "Join us for the upcoming Innovation Event 2026, a gathering that celebrates cutting-edge creativity, groundbreaking technologies, and strategic marketing insights. This event will host industry leaders, innovators, and professionals from around the globe, providing an unmatched platform for networking, knowledge exchange, and collaboration. Participants will explore key topics ranging from AI-driven marketing strategies to sustainable business practices, and gain insights into the latest trends shaping the future of communication and branding. Don't miss this opportunity to engage with thought leaders, witness live demonstrations, and discover opportunities that will elevate your business strategy and personal growth. The event will feature keynote speeches, panel discussions, interactive workshops, and exclusive networking sessions designed to inspire, inform, and empower all attendees.",
-    date: "2026-05-10",
-    isoDate: "2026-05-10T09:00:00",
+    date: "To be announced",
+    isoDate: null,
     location: "Cairo, Egypt",
     logo: mainLogo,
     link: "https://www.prcircle.shop",
@@ -170,173 +196,170 @@ const EventsPage = () => {
     const media = gsap.matchMedia();
 
     const context = gsap.context(() => {
-      media.add(
-        "(prefers-reduced-motion: no-preference)",
-        () => {
-          gsap
-            .timeline({
-              defaults: {
-                ease: "power3.out",
-              },
-            })
-            .fromTo(
-              ".events-hero-logo-wrap",
-              {
-                y: 22,
-                autoAlpha: 0,
-                scale: 0.96,
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                scale: 1,
-                duration: 0.65,
-              },
-            )
-            .fromTo(
-              ".events-hero-title",
-              {
-                y: 42,
-                autoAlpha: 0,
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.82,
-              },
-              "-=0.3",
-            )
-            .fromTo(
-              ".events-hero-subtitle",
-              {
-                y: 25,
-                autoAlpha: 0,
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.65,
-              },
-              "-=0.4",
-            )
-            .fromTo(
-              ".events-countdown, .events-countdown-expired",
-              {
-                y: 20,
-                autoAlpha: 0,
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.55,
-              },
-              "-=0.32",
-            )
-            .fromTo(
-              ".events-hero-scroll-btn",
-              {
-                y: 16,
-                autoAlpha: 0,
-              },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.5,
-              },
-              "-=0.25",
-            );
+      media.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap
+          .timeline({
+            defaults: {
+              ease: "power3.out",
+            },
+          })
+          .fromTo(
+            ".events-hero-logo-wrap",
+            {
+              y: 22,
+              autoAlpha: 0,
+              scale: 0.96,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              scale: 1,
+              duration: 0.65,
+            },
+          )
+          .fromTo(
+            ".events-hero-title",
+            {
+              y: 42,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.82,
+            },
+            "-=0.3",
+          )
+          .fromTo(
+            ".events-hero-subtitle",
+            {
+              y: 25,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.65,
+            },
+            "-=0.4",
+          )
+          .fromTo(
+            ".events-countdown, .events-countdown-expired",
+            {
+              y: 20,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.55,
+            },
+            "-=0.32",
+          )
+          .fromTo(
+            ".events-hero-scroll-btn",
+            {
+              y: 16,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.5,
+            },
+            "-=0.25",
+          );
 
-          gsap.to(".events-hero-video", {
-            yPercent: 7,
-            ease: "none",
+        gsap.to(".events-hero-video", {
+          yPercent: 7,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        gsap.fromTo(
+          ".events-featured-visual",
+          {
+            x: -45,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
+            autoAlpha: 1,
+            duration: 0.75,
+            ease: "power3.out",
             scrollTrigger: {
-              trigger: heroRef.current,
-              start: "top top",
-              end: "bottom top",
-              scrub: true,
-              invalidateOnRefresh: true,
+              trigger: featuredRef.current,
+              start: "top 76%",
+              once: true,
             },
-          });
+          },
+        );
 
-          gsap.fromTo(
-            ".events-featured-visual",
-            {
-              x: -45,
-              autoAlpha: 0,
+        gsap.fromTo(
+          ".events-featured-content > *",
+          {
+            y: 25,
+            autoAlpha: 0,
+          },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: featuredRef.current,
+              start: "top 76%",
+              once: true,
             },
-            {
-              x: 0,
-              autoAlpha: 1,
-              duration: 0.75,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: featuredRef.current,
-                start: "top 76%",
-                once: true,
-              },
-            },
-          );
+          },
+        );
 
-          gsap.fromTo(
-            ".events-featured-content > *",
-            {
-              y: 25,
-              autoAlpha: 0,
+        gsap.fromTo(
+          ".events-secondary-content > *",
+          {
+            y: 25,
+            autoAlpha: 0,
+          },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: secondaryRef.current,
+              start: "top 78%",
+              once: true,
             },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.6,
-              stagger: 0.08,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: featuredRef.current,
-                start: "top 76%",
-                once: true,
-              },
-            },
-          );
+          },
+        );
 
-          gsap.fromTo(
-            ".events-secondary-content > *",
-            {
-              y: 25,
-              autoAlpha: 0,
+        gsap.fromTo(
+          ".events-secondary-media",
+          {
+            x: 45,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
+            autoAlpha: 1,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: secondaryRef.current,
+              start: "top 78%",
+              once: true,
             },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.6,
-              stagger: 0.08,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: secondaryRef.current,
-                start: "top 78%",
-                once: true,
-              },
-            },
-          );
-
-          gsap.fromTo(
-            ".events-secondary-media",
-            {
-              x: 45,
-              autoAlpha: 0,
-            },
-            {
-              x: 0,
-              autoAlpha: 1,
-              duration: 0.75,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: secondaryRef.current,
-                start: "top 78%",
-                once: true,
-              },
-            },
-          );
-        },
-      );
+          },
+        );
+      });
     }, pageRef);
 
     return () => {
@@ -358,14 +381,10 @@ const EventsPage = () => {
         : "--mfm-navbar-height";
 
     const navbarHeight =
-      parseFloat(
-        rootStyles.getPropertyValue(navbarVariable),
-      ) || 84;
+      parseFloat(rootStyles.getPropertyValue(navbarVariable)) || 84;
 
     const top =
-      section.getBoundingClientRect().top +
-      window.scrollY -
-      navbarHeight;
+      section.getBoundingClientRect().top + window.scrollY - navbarHeight;
 
     window.scrollTo({
       top,
@@ -374,15 +393,9 @@ const EventsPage = () => {
   };
 
   return (
-    <div
-      ref={pageRef}
-      className="events-page-wrapper"
-    >
+    <div ref={pageRef} className="events-page-wrapper">
       <main>
-        <section
-          ref={heroRef}
-          className="events-hero-section"
-        >
+        <section ref={heroRef} className="events-hero-section">
           <video
             autoPlay
             muted
@@ -392,37 +405,29 @@ const EventsPage = () => {
             className="events-hero-video"
             aria-hidden="true"
           >
-            <source
-              src={heroVideo}
-              type="video/mp4"
-            />
+            <source src={heroVideo} type="video/mp4" />
           </video>
 
           <div className="events-hero-overlay" />
 
           <div className="events-shell events-hero-layout">
             <div className="events-hero-content">
-              <div className="events-hero-logo-wrap">
-                <img
-                  src={mainLogo}
-                  alt="MFM"
-                  className="events-hero-logo"
-                />
-              </div>
-
-              <h1 className="events-hero-title">
-                Upcoming Events
-              </h1>
+              <h1 className="events-hero-title">Upcoming Events</h1>
 
               <p className="events-hero-subtitle">
-                Explore our latest events, bringing together industry
-                leaders, innovation, and unmatched networking
-                opportunities across MENA.
+                Explore our latest events, bringing together industry leaders,
+                innovation, and unmatched networking opportunities across MENA.
               </p>
+              <div className="events-hero-event">
+  <span className="events-hero-event-label">
+        PR CIRCLE presents
+  </span>
 
-              <CountdownTimer
-                targetDate={featuredEvent.isoDate}
-              />
+  <h2 className="events-hero-event-name">
+    {featuredEvent.title}
+  </h2>
+</div>
+              <CountdownTimer targetDate={featuredEvent.isoDate} />
 
               <button
                 type="button"
@@ -453,9 +458,7 @@ const EventsPage = () => {
                   )}
                 </div>
 
-                <span className="events-featured-label">
-                  Featured event
-                </span>
+                <span className="events-featured-label">Featured event</span>
               </div>
 
               <div className="events-featured-content">
@@ -509,16 +512,11 @@ const EventsPage = () => {
           </div>
         </section>
 
-        <section
-          ref={secondaryRef}
-          className="events-secondary-section"
-        >
+        <section ref={secondaryRef} className="events-secondary-section">
           <div className="events-shell">
             <article className="events-secondary-card">
               <div className="events-secondary-content">
-                <span className="events-section-kicker">
-                  More events
-                </span>
+                <span className="events-section-kicker">More events</span>
 
                 <h2>{secondaryEvent.title}</h2>
 

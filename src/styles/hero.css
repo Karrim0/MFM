@@ -52,22 +52,24 @@
 /* ================= OVERLAY ================= */
 
 .mfm-hero__overlay {
-    position: absolute;
+     position: absolute;
     inset: 0;
-    z-index: -2;
+    z-index: 2;
 
     background:
-        linear-gradient(
-            180deg,
-            rgba(0, 28, 34, 0.5) 0%,
-            rgba(0, 53, 63, 0.7) 48%,
-            rgba(0, 29, 35, 0.86) 100%
-        ),
         radial-gradient(
-            circle at 50% 38%,
-            rgba(1, 123, 141, 0.2),
-            transparent 55%
+            circle at 25% 35%,
+            rgba(1, 123, 141, 0.38) 0%,
+            rgba(1, 123, 141, 0.22) 25%,
+            transparent 60%
+        ),
+        linear-gradient(
+            120deg,
+            rgba(1, 123, 141, 0.46) 45%,
+            rgba(131, 131, 131, 0.34) 100%
         );
+
+    pointer-events: none;
 }
 
 .mfm-hero__texture {

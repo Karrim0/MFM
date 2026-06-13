@@ -148,17 +148,20 @@
 .about-hero-overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
 
   background:
-    linear-gradient(
-      90deg,
-      rgba(0, 31, 37, 0.96) 0%,
-      rgba(0, 48, 57, 0.88) 45%,
-      rgba(0, 72, 83, 0.58) 72%,
-      rgba(0, 67, 78, 0.38) 100%
+    radial-gradient(
+      circle at 25% 35%,
+      rgba(1, 123, 141, 0.38) 0%,
+      rgba(1, 123, 141, 0.22) 25%,
+      transparent 60%
     ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 24, 29, 0.36));
+    linear-gradient(
+      120deg,
+      rgba(1, 123, 141, 0.46) 45%,
+      rgba(131, 131, 131, 0.34) 100%
+    );
 
   pointer-events: none;
 }
@@ -235,19 +238,15 @@
   scroll-margin-top: calc(var(--mfm-navbar-height, 84px) + 24px);
 
   padding: 105px 0;
-
-  background:
-    radial-gradient(circle at 95% 8%, rgba(1, 123, 141, 0.07), transparent 26%),
-    #ffffff;
 }
 
 .about-story-grid {
   display: grid;
   grid-template-columns:
-    minmax(440px, 0.92fr)
-    minmax(0, 1.08fr);
+    minmax(500px, 1fr)
+    minmax(0, 1fr);
 
-  gap: clamp(60px, 7vw, 100px);
+  gap: clamp(50px, 5vw, 78px);
   align-items: center;
 }
 
@@ -263,8 +262,8 @@
   align-items: center;
   justify-content: center;
 
-  min-height: 440px;
-  padding: 38px;
+  min-height: 500px;
+  padding: 24px;
 
   overflow: hidden;
 
@@ -296,7 +295,9 @@
 
   background: rgba(1, 123, 141, 0.06);
 }
-
+.about-story-content .about-heading {
+  color: #017b8d;
+}
 .about-story-image-wrap {
   position: relative;
   z-index: 2;
@@ -306,7 +307,7 @@
   justify-content: center;
 
   width: 100%;
-  padding: 20px;
+  padding: 12px;
 
   border: 1px solid rgba(1, 123, 141, 0.11);
   border-radius: 20px;
@@ -321,7 +322,7 @@
 .about-story-image-wrap img {
   display: block;
 
-  width: min(100%, 464px);
+  width: min(100%, 560px);
   height: auto;
 
   object-fit: contain;
@@ -398,11 +399,7 @@
   border-radius: 17px;
 
   background:
-    linear-gradient(
-      135deg,
-      rgba(1, 123, 141, 0.055),
-      rgba(1, 123, 141, 0.015)
-    ),
+    linear-gradient(135deg, rgba(1, 123, 141, 0.055), rgba(1, 123, 141, 0.015)),
     var(--about-soft);
 }
 
@@ -579,7 +576,7 @@
 }
 
 .about-projects-heading h2 {
-  color: var(--about-ink);
+  color: #017b8d;
 }
 
 .about-projects-heading > p {
@@ -638,11 +635,7 @@
   position: absolute;
   inset: 0;
 
-  background: linear-gradient(
-    to top,
-    rgba(1, 33, 39, 0.72),
-    transparent 48%
-  );
+  background: linear-gradient(to top, rgba(1, 33, 39, 0.72), transparent 48%);
 
   pointer-events: none;
 }

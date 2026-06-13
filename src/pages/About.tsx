@@ -1,10 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -58,24 +54,28 @@ const About = () => {
 
     gsap.to(mediaElement, {
       autoAlpha: 0,
-      y: 12,
-      duration: 0.22,
-      ease: "power2.in",
+      y: 8,
+      duration: 0.55,
+      ease: "power2.inOut",
       onComplete: () => {
         setActiveIndex(nextIndex);
 
         requestAnimationFrame(() => {
           const updatedMediaElement = mainMediaRef.current;
+
           if (!updatedMediaElement) return;
 
           gsap.fromTo(
             updatedMediaElement,
-            { autoAlpha: 0, y: 12 },
+            {
+              autoAlpha: 0,
+              y: 8,
+            },
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.42,
-              ease: "power3.out",
+              duration: 0.8,
+              ease: "power2.out",
             },
           );
         });
@@ -96,132 +96,238 @@ const About = () => {
 
     const context = gsap.context(() => {
       media.add("(prefers-reduced-motion: no-preference)", () => {
+        const sideOffset = window.innerWidth <= 768 ? 28 : 70;
+
+        /* ================= HERO ================= */
+
         gsap
-          .timeline({ defaults: { ease: "power3.out" } })
+          .timeline({
+            defaults: {
+              ease: "power2.out",
+            },
+          })
           .fromTo(
             ".about-hero-title",
-            { y: 40, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.82 },
+            {
+              x: -sideOffset,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              autoAlpha: 1,
+              duration: 1.9,
+            },
           )
           .fromTo(
-            ".about-hero-copy > *",
-            { y: 22, autoAlpha: 0 },
+            ".about-hero-copy",
             {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.58,
-              stagger: 0.1,
+              x: sideOffset,
+              autoAlpha: 0,
             },
-            "-=0.4",
+            {
+              x: 0,
+              autoAlpha: 1,
+              duration: 1.9,
+            },
+            "-=1.05",
           );
 
+        /* ================= HERO VIDEO ================= */
+
         gsap.to(".about-hero-video", {
-          yPercent: 7,
+          yPercent: 3,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: true,
+            scrub: 2.2,
             invalidateOnRefresh: true,
           },
         });
 
+        /* ================= STORY ================= */
+
         gsap.fromTo(
           ".about-story-media",
-          { x: -46, autoAlpha: 0 },
+          {
+            x: -sideOffset,
+            autoAlpha: 0,
+          },
           {
             x: 0,
             autoAlpha: 1,
-            duration: 0.8,
-            ease: "power3.out",
+            duration: 1.9,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: ".about-story-section",
-              start: "top 76%",
+              start: "top 82%",
               once: true,
             },
           },
         );
 
         gsap.fromTo(
-          ".about-story-content > *",
-          { y: 26, autoAlpha: 0 },
+          ".about-story-content",
           {
-            y: 0,
+            x: sideOffset,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
             autoAlpha: 1,
-            duration: 0.62,
-            stagger: 0.08,
-            ease: "power3.out",
+            duration: 1.9,
+            ease: "power2.out",
             scrollTrigger: {
-              trigger: ".about-story-content",
-              start: "top 78%",
+              trigger: ".about-story-section",
+              start: "top 82%",
               once: true,
             },
           },
         );
+
+        /* ================= EXPERIENCE ================= */
 
         gsap.fromTo(
           ".about-experience-card",
-          { scale: 0.95, autoAlpha: 0 },
           {
-            scale: 1,
+            x: -sideOffset,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
             autoAlpha: 1,
-            duration: 0.72,
-            ease: "power3.out",
+            duration: 1.9,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: ".about-experience-section",
-              start: "top 79%",
+              start: "top 82%",
               once: true,
             },
           },
         );
 
         gsap.fromTo(
-          ".about-experience-content > *",
-          { y: 24, autoAlpha: 0 },
+          ".about-experience-content",
           {
-            y: 0,
+            x: sideOffset,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
             autoAlpha: 1,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: "power3.out",
+            duration: 1.9,
+            ease: "power2.out",
             scrollTrigger: {
-              trigger: ".about-experience-content",
-              start: "top 79%",
+              trigger: ".about-experience-section",
+              start: "top 82%",
               once: true,
             },
           },
         );
+
+        /* ================= COUNTER ================= */
 
         if (countRef.current) {
           gsap.fromTo(
             countRef.current,
-            { innerText: 0 },
+            {
+              innerText: 0,
+            },
             {
               innerText: 40,
-              duration: 1.7,
-              snap: { innerText: 1 },
-              ease: "power2.out",
+              duration: 2.4,
+              snap: {
+                innerText: 1,
+              },
+              ease: "power1.out",
               scrollTrigger: {
                 trigger: ".about-experience-section",
-                start: "top 80%",
+                start: "top 82%",
                 once: true,
               },
             },
           );
         }
 
+        /* ================= PROJECTS HEADING ================= */
+
         gsap.fromTo(
-          ".about-projects-shell",
-          { y: 34, autoAlpha: 0 },
+          ".about-projects-heading > div",
+          {
+            x: -sideOffset,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
+            autoAlpha: 1,
+            duration: 1.9,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".about-projects-heading",
+              start: "top 84%",
+              once: true,
+            },
+          },
+        );
+
+        gsap.fromTo(
+          ".about-projects-heading > p",
+          {
+            x: sideOffset,
+            autoAlpha: 0,
+          },
+          {
+            x: 0,
+            autoAlpha: 1,
+            duration: 1.9,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".about-projects-heading",
+              start: "top 84%",
+              once: true,
+            },
+          },
+        );
+
+        /* ================= PROJECTS SLIDER ================= */
+
+        gsap.fromTo(
+          ".about-slider",
+          {
+            y: 25,
+            autoAlpha: 0,
+          },
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.78,
-            ease: "power3.out",
+            duration: 1.7,
+            ease: "power2.out",
             scrollTrigger: {
-              trigger: ".about-projects-section",
-              start: "top 80%",
+              trigger: ".about-slider",
+              start: "top 84%",
+              once: true,
+            },
+          },
+        );
+
+        /* ================= THUMBNAILS ================= */
+
+        gsap.fromTo(
+          ".about-thumb",
+          {
+            y: 16,
+            autoAlpha: 0,
+          },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 1.25,
+            stagger: 0.14,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: ".about-thumbnail-row",
+              start: "top 90%",
               once: true,
             },
           },
@@ -277,7 +383,7 @@ const About = () => {
           <div className="about-shell about-hero-layout">
             <div className="about-hero-content">
               <h1 className="about-hero-title">
-                <span className="about-hero-brand">mfm-Egypt</span>
+                <span className="about-hero-brand">MFM-EGYPT</span>
 
                 <span className="about-hero-company">
                   Marketing Facility Management
@@ -318,7 +424,7 @@ const About = () => {
             <div className="about-story-content">
               <span className="about-story-line" aria-hidden="true" />
 
-              <h2>Marketing Facility Management</h2>
+              <h2 className="about-heading">Marketing Facility Management</h2>
 
               <p className="about-story-lead">
                 We believe that we live in a real-time world, which demands
