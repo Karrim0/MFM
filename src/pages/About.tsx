@@ -1,10 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaCheckCircle,
-} from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -378,7 +374,7 @@ const About = () => {
             },
             1.12,
           );
-
+        // =====
         const counterState = {
           value: 0,
         };
@@ -392,18 +388,18 @@ const About = () => {
 
         const counterTween = gsap.to(counterState, {
           value: 40,
-          duration: 2.2,
+          duration: 4.5,
           paused: true,
-          ease: "power2.out",
+          ease: "power1.out",
           snap: {
             value: 1,
           },
           onUpdate: () => {
-            if (countRef.current) {
-              countRef.current.textContent = Math.round(
-                counterState.value,
-              ).toString();
-            }
+            if (!countRef.current) return;
+
+            countRef.current.textContent = Math.round(
+              counterState.value,
+            ).toString();
           },
           onComplete: () => {
             if (countRef.current) {
@@ -411,16 +407,28 @@ const About = () => {
             }
           },
         });
+        ScrollTrigger.create({
+          trigger: ".about-experience-card",
+          start: isMobile ? "top 82%" : "top 72%",
+          once: true,
+          invalidateOnRefresh: true,
+          onEnter: () => {
+            counterState.value = 0;
+
+            if (countRef.current) {
+              countRef.current.textContent = "0";
+            }
+
+            counterTween.restart();
+          },
+        });
 
         const experienceTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: ".about-experience-section",
-            start: isMobile ? "top 92%" : "top 84%",
+            start: isMobile ? "top 88%" : "top 78%",
             once: true,
             invalidateOnRefresh: true,
-            onEnter: () => {
-              counterTween.restart();
-            },
           },
           defaults: {
             ease: "power3.out",
@@ -731,10 +739,9 @@ const About = () => {
   }, []);
 
   useLayoutEffect(() => {
-    const thumbnailVideos =
-      pageRef.current?.querySelectorAll<HTMLVideoElement>(
-        ".about-thumbnail-row video",
-      );
+    const thumbnailVideos = pageRef.current?.querySelectorAll<HTMLVideoElement>(
+      ".about-thumbnail-row video",
+    );
 
     thumbnailVideos?.forEach((video) => {
       video.pause();
@@ -758,8 +765,7 @@ const About = () => {
       activeThumbnail.offsetLeft -
       (thumbnailRow.clientWidth - activeThumbnail.offsetWidth) / 2;
 
-    const maximumScroll =
-      thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
+    const maximumScroll = thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
 
     const nextScrollPosition = Math.min(
       Math.max(targetPosition, 0),
@@ -784,20 +790,15 @@ const About = () => {
     const handleWheel = (event: WheelEvent) => {
       if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
 
-      const maximumScroll =
-        thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
+      const maximumScroll = thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
 
       if (maximumScroll <= 0) return;
 
       const movingForward = event.deltaY > 0;
       const atStart = thumbnailRow.scrollLeft <= 0;
-      const atEnd =
-        thumbnailRow.scrollLeft >= maximumScroll - 1;
+      const atEnd = thumbnailRow.scrollLeft >= maximumScroll - 1;
 
-      if (
-        (movingForward && atEnd) ||
-        (!movingForward && atStart)
-      ) {
+      if ((movingForward && atEnd) || (!movingForward && atStart)) {
         return;
       }
 
@@ -841,9 +842,7 @@ const About = () => {
           <div className="about-shell about-hero-layout">
             <div className="about-hero-content">
               <h1 className="about-hero-title">
-                <span className="about-hero-brand">
-                  MFM-EGYPT
-                </span>
+                <span className="about-hero-brand">MFM-EGYPT</span>
 
                 <span className="about-hero-company">
                   Marketing Facility Management
@@ -853,15 +852,14 @@ const About = () => {
               <div className="about-hero-copy">
                 <p className="about-hero-description">
                   The company with more than 40 years’ experience in Egypt,
-                  Qatar, UAE, and KSA as an integrated marketing
-                  communications and public relations firm.
+                  Qatar, UAE, and KSA as an integrated marketing communications
+                  and public relations firm.
                 </p>
 
                 <p className="about-hero-description">
-                  We have an enviable list of clients across many sectors,
-                  all with one thing in common — the desire to maximize
-                  their returns through relevant, engaging, results-driven
-                  marketing.
+                  We have an enviable list of clients across many sectors, all
+                  with one thing in common — the desire to maximize their
+                  returns through relevant, engaging, results-driven marketing.
                 </p>
 
                 <p className="about-hero-description">
@@ -887,14 +885,9 @@ const About = () => {
             </div>
 
             <div className="about-story-content">
-              <span
-                className="about-story-line"
-                aria-hidden="true"
-              />
+              <span className="about-story-line" aria-hidden="true" />
 
-              <h2 className="about-heading">
-                Marketing Facility Management
-              </h2>
+              <h2 className="about-heading">Marketing Facility Management</h2>
 
               <p className="about-story-lead">
                 We believe that we live in a real-time world, which demands
@@ -905,18 +898,17 @@ const About = () => {
                 In today&apos;s world, change is constant and complexity is
                 ever-growing. Organizations need communications partners to
                 provide senior counsel and data-driven solutions to protect
-                their brands and drive business results. MFM agency&apos;s
-                SAVE model was created to do just that.
+                their brands and drive business results. MFM agency&apos;s SAVE
+                model was created to do just that.
               </p>
 
               <div className="about-story-approach">
                 <h3>Our Approach</h3>
 
                 <p>
-                  Our approach is based on the SAVE model, a marketing
-                  framework focused on providing solutions, making products
-                  and services accessible, demonstrating value, and
-                  educating stakeholders.
+                  Our approach is based on the SAVE model, a marketing framework
+                  focused on providing solutions, making products and services
+                  accessible, demonstrating value, and educating stakeholders.
                 </p>
               </div>
             </div>
@@ -938,15 +930,12 @@ const About = () => {
                 Why choose us
               </span>
 
-              <h2>
-                Focused on work that gets done — and gets results.
-              </h2>
+              <h2>Focused on work that gets done — and gets results.</h2>
 
               <p>
-                We combine strategic thinking with practical delivery,
-                helping organizations create stronger communication, better
-                audience experiences, and more meaningful client
-                relationships.
+                We combine strategic thinking with practical delivery, helping
+                organizations create stronger communication, better audience
+                experiences, and more meaningful client relationships.
               </p>
 
               <ul className="about-check-list">
@@ -982,9 +971,7 @@ const About = () => {
           <div className="about-shell about-projects-shell">
             <header className="about-projects-heading">
               <div>
-                <span className="about-section-kicker">
-                  Selected work
-                </span>
+                <span className="about-section-kicker">Selected work</span>
 
                 <h2>Our projects</h2>
 
@@ -995,8 +982,8 @@ const About = () => {
               </div>
 
               <p>
-                A closer look at some of our campaigns, activations,
-                events, and audience experiences.
+                A closer look at some of our campaigns, activations, events, and
+                audience experiences.
               </p>
             </header>
 
@@ -1053,10 +1040,7 @@ const About = () => {
               </button>
             </div>
 
-            <div
-              ref={thumbnailRowRef}
-              className="about-thumbnail-row"
-            >
+            <div ref={thumbnailRowRef} className="about-thumbnail-row">
               {galleryItems.map((item, index) => (
                 <button
                   ref={(element) => {
@@ -1065,15 +1049,11 @@ const About = () => {
                   type="button"
                   key={`${item.src}-${index}`}
                   className={`about-thumb${
-                    index === activeIndex
-                      ? " about-thumb--active"
-                      : ""
+                    index === activeIndex ? " about-thumb--active" : ""
                   }`}
                   onClick={() => changeSlide(index)}
                   aria-label={`Open ${item.title}`}
-                  aria-current={
-                    index === activeIndex ? "true" : undefined
-                  }
+                  aria-current={index === activeIndex ? "true" : undefined}
                 >
                   {item.type === "image" ? (
                     <img
@@ -1091,9 +1071,7 @@ const About = () => {
                     />
                   )}
 
-                  <span>
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                 </button>
               ))}
             </div>
