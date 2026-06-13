@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import { ChevronsDown } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -36,6 +37,31 @@ const Gallery = () => {
   const trackRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
 
+  const horizontalTriggerRef = useRef<ScrollTrigger | null>(null);
+
+  const handleSkipGallery = () => {
+    const section = sectionRef.current;
+    const horizontalTrigger = horizontalTriggerRef.current;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (horizontalTrigger) {
+      window.scrollTo({
+        top: Math.ceil(horizontalTrigger.end) + 2,
+        behavior: reducedMotion ? "auto" : "smooth",
+      });
+
+      return;
+    }
+
+    section?.nextElementSibling?.scrollIntoView({
+      behavior: reducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  };
+
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const viewport = viewportRef.current;
@@ -47,16 +73,6 @@ const Gallery = () => {
     const media = gsap.matchMedia();
 
     const context = gsap.context(() => {
-      const background = section.querySelector<HTMLElement>(
-        ".home-gallery__background",
-      );
-
-      const grid = section.querySelector<HTMLElement>(".home-gallery__grid");
-
-      const glows = Array.from(
-        section.querySelectorAll<HTMLElement>(".home-gallery__glow"),
-      );
-
       const kicker = section.querySelector<HTMLElement>(
         ".home-gallery__kicker",
       );
@@ -71,20 +87,8 @@ const Gallery = () => {
         ".home-gallery__subtitle",
       );
 
-      const cards = Array.from(
-        section.querySelectorAll<HTMLElement>(".home-gallery__card"),
-      );
-
-      const cardNumbers = Array.from(
-        section.querySelectorAll<HTMLElement>(".home-gallery__card-number"),
-      );
-
-      const captionLabels = Array.from(
-        section.querySelectorAll<HTMLElement>(".home-gallery__caption-label"),
-      );
-
-      const captionTitles = Array.from(
-        section.querySelectorAll<HTMLElement>(".home-gallery__caption h3"),
+      const skipButton = section.querySelector<HTMLElement>(
+        ".home-gallery__skip-button",
       );
 
       const progressTrack = section.querySelector<HTMLElement>(
@@ -93,207 +97,50 @@ const Gallery = () => {
 
       media.add("(prefers-reduced-motion: no-preference)", () => {
         if (
-          !background ||
-          !grid ||
           !kicker ||
           !title ||
           !titleLine ||
           !subtitle ||
+          !skipButton ||
           !progressTrack
         ) {
           return;
         }
 
-        const isMobile = window.matchMedia("(max-width: 900px)").matches;
+        const animatedElements = [
+          kicker,
+          title,
+          titleLine,
+          subtitle,
+          skipButton,
+          track,
+          progressTrack,
+        ];
+
+        gsap.set(animatedElements, {
+          willChange: "transform, opacity",
+        });
 
         const introTimeline = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: () => (isMobile ? "top 88%" : "top 82%"),
+            start: "top 88%",
             once: true,
             invalidateOnRefresh: true,
           },
           defaults: {
-            ease: "power3.out",
-            force3D: true,
+            ease: "power2.out",
+          },
+          onComplete: () => {
+            gsap.set(animatedElements, {
+              clearProps: "willChange",
+            });
           },
         });
 
         introTimeline
           .fromTo(
-            background,
-            {
-              scale: 1.045,
-              autoAlpha: 0.75,
-            },
-            {
-              scale: 1,
-              autoAlpha: 1,
-              duration: 1.7,
-              clearProps: "transform,opacity,visibility",
-            },
-            0,
-          )
-          .fromTo(
-            grid,
-            {
-              autoAlpha: 0,
-            },
-            {
-              autoAlpha: 1,
-              duration: 1.45,
-              ease: "power2.out",
-              clearProps: "opacity,visibility",
-            },
-            0.15,
-          )
-          .fromTo(
-            glows,
-            {
-              scale: 0.78,
-              autoAlpha: 0,
-            },
-            {
-              scale: 1,
-              autoAlpha: 1,
-              duration: 1.35,
-              stagger: 0.18,
-              ease: "power2.out",
-            },
-            0.12,
-          )
-          .fromTo(
             kicker,
-            {
-              x: isMobile ? 0 : -42,
-              y: isMobile ? 24 : 8,
-              autoAlpha: 0,
-            },
-            {
-              x: 0,
-              y: 0,
-              autoAlpha: 1,
-              duration: 1,
-              clearProps: "transform,opacity,visibility",
-            },
-            0.18,
-          )
-          .fromTo(
-            title,
-            {
-              x: isMobile ? 0 : -52,
-              y: isMobile ? 28 : 12,
-              autoAlpha: 0,
-            },
-            {
-              x: 0,
-              y: 0,
-              autoAlpha: 1,
-              duration: 1.18,
-              clearProps: "transform,opacity,visibility",
-            },
-            0.32,
-          )
-          .fromTo(
-            titleLine,
-            {
-              scaleX: 0,
-              autoAlpha: 0,
-            },
-            {
-              scaleX: 1,
-              autoAlpha: 1,
-              duration: 0.9,
-              ease: "power2.out",
-              clearProps: "transform,opacity,visibility",
-            },
-            0.58,
-          )
-          .fromTo(
-            subtitle,
-            {
-              x: isMobile ? 0 : 48,
-              y: isMobile ? 28 : 14,
-              autoAlpha: 0,
-            },
-            {
-              x: 0,
-              y: 0,
-              autoAlpha: 1,
-              duration: 1.15,
-              ease: "power2.out",
-              clearProps: "transform,opacity,visibility",
-            },
-            0.44,
-          )
-          .fromTo(
-            cards,
-            {
-              y: 48,
-              scale: 0.965,
-              autoAlpha: 0,
-            },
-            {
-              y: 0,
-              scale: 1,
-              autoAlpha: 1,
-              duration: 1.15,
-              stagger: 0.13,
-              clearProps: "transform,opacity,visibility",
-            },
-            0.7,
-          )
-
-          .fromTo(
-            cardNumbers,
-            {
-              y: -12,
-              autoAlpha: 0,
-            },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.75,
-              stagger: 0.13,
-              ease: "power2.out",
-              clearProps: "transform,opacity,visibility",
-            },
-            1,
-          )
-          .fromTo(
-            captionLabels,
-            {
-              y: 14,
-              autoAlpha: 0,
-            },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.75,
-              stagger: 0.13,
-              ease: "power2.out",
-              clearProps: "transform,opacity,visibility",
-            },
-            1.08,
-          )
-          .fromTo(
-            captionTitles,
-            {
-              y: 22,
-              autoAlpha: 0,
-            },
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.9,
-              stagger: 0.13,
-              ease: "power2.out",
-              clearProps: "transform,opacity,visibility",
-            },
-            1.16,
-          )
-          .fromTo(
-            progressTrack,
             {
               y: 12,
               autoAlpha: 0,
@@ -301,37 +148,104 @@ const Gallery = () => {
             {
               y: 0,
               autoAlpha: 1,
-              duration: 0.85,
-              ease: "power2.out",
+              duration: 0.55,
               clearProps: "transform,opacity,visibility",
             },
-            1.35,
+            0,
+          )
+          .fromTo(
+            title,
+            {
+              y: 18,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.75,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.08,
+          )
+          .fromTo(
+            titleLine,
+            {
+              scaleX: 0,
+              autoAlpha: 0,
+              transformOrigin: "left center",
+            },
+            {
+              scaleX: 1,
+              autoAlpha: 1,
+              duration: 0.6,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.2,
+          )
+          .fromTo(
+            subtitle,
+            {
+              y: 14,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.68,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.14,
+          )
+          .fromTo(
+            skipButton,
+            {
+              y: 10,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.6,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.24,
+          )
+          .fromTo(
+            track,
+            {
+              y: 22,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.85,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.3,
+          )
+          .fromTo(
+            progressTrack,
+            {
+              y: 8,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.55,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.46,
           );
-
-        gsap.to(".home-gallery__glow--one", {
-          x: 14,
-          y: -11,
-          duration: 7,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          force3D: true,
-        });
-
-        gsap.to(".home-gallery__glow--two", {
-          x: -12,
-          y: 15,
-          duration: 8,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          force3D: true,
-        });
       });
 
       media.add(
         "(min-width: 901px) and (prefers-reduced-motion: no-preference)",
         () => {
+          let isActive = true;
+          let refreshFrame = 0;
+
           const getNavbarHeight = () => {
             const rootStyles = getComputedStyle(document.documentElement);
 
@@ -343,6 +257,9 @@ const Gallery = () => {
 
           const getScrollDistance = () =>
             Math.max(0, track.scrollWidth - viewport.clientWidth);
+
+          const getScrollDuration = () =>
+            Math.max(getScrollDistance(), window.innerHeight * 0.78);
 
           const setProgress = gsap.quickSetter(progress, "scaleX");
 
@@ -358,43 +275,50 @@ const Gallery = () => {
 
             scrollTrigger: {
               trigger: section,
-
               start: () => `top top+=${getNavbarHeight()}`,
-
-              end: () =>
-                `+=${Math.max(getScrollDistance(), window.innerHeight * 0.85)}`,
+              end: () => `+=${getScrollDuration()}`,
 
               pin: true,
               pinSpacing: true,
-              scrub: 1.15,
+              scrub: 0.65,
               anticipatePin: 1,
+              fastScrollEnd: true,
               invalidateOnRefresh: true,
 
               onUpdate: (self) => {
                 setProgress(self.progress);
               },
+
+              onRefresh: (self) => {
+                setProgress(self.progress);
+              },
             },
           });
 
-          const resizeObserver = new ResizeObserver(() => {
-            ScrollTrigger.refresh();
-          });
+          horizontalTriggerRef.current = horizontalTween.scrollTrigger ?? null;
+
+          const requestRefresh = () => {
+            cancelAnimationFrame(refreshFrame);
+
+            refreshFrame = requestAnimationFrame(() => {
+              if (isActive) {
+                ScrollTrigger.refresh();
+              }
+            });
+          };
+
+          const resizeObserver = new ResizeObserver(requestRefresh);
 
           resizeObserver.observe(viewport);
-          resizeObserver.observe(track);
 
-          const imageElements = Array.from(
+          const images = Array.from(
             track.querySelectorAll<HTMLImageElement>("img"),
           );
 
-          Promise.all(
-            imageElements.map((image) => {
+          Promise.allSettled(
+            images.map((image) => {
               if (image.complete) {
-                if (image.decode) {
-                  return image.decode().catch(() => undefined);
-                }
-
-                return Promise.resolve();
+                return image.decode?.() ?? Promise.resolve();
               }
 
               return new Promise<void>((resolve) => {
@@ -407,12 +331,18 @@ const Gallery = () => {
                 });
               });
             }),
-          ).finally(() => {
-            ScrollTrigger.refresh();
+          ).then(() => {
+            requestRefresh();
           });
 
           return () => {
+            isActive = false;
+
+            cancelAnimationFrame(refreshFrame);
             resizeObserver.disconnect();
+
+            horizontalTriggerRef.current = null;
+
             horizontalTween.scrollTrigger?.kill();
             horizontalTween.kill();
           };
@@ -420,6 +350,8 @@ const Gallery = () => {
       );
 
       media.add("(max-width: 900px)", () => {
+        horizontalTriggerRef.current = null;
+
         gsap.set(track, {
           clearProps: "transform",
         });
@@ -430,29 +362,22 @@ const Gallery = () => {
       });
 
       media.add("(prefers-reduced-motion: reduce)", () => {
+        horizontalTriggerRef.current = null;
+
         gsap.set(
           [
-            background,
-            grid,
-            ...glows,
             kicker,
             title,
             titleLine,
             subtitle,
-            ...cards,
-            ...cardNumbers,
-            ...captionLabels,
-            ...captionTitles,
+            skipButton,
+            track,
             progressTrack,
           ],
           {
             clearProps: "all",
           },
         );
-
-        gsap.set(track, {
-          clearProps: "transform",
-        });
 
         gsap.set(progress, {
           scaleX: 1,
@@ -461,6 +386,8 @@ const Gallery = () => {
     }, section);
 
     return () => {
+      horizontalTriggerRef.current = null;
+
       media.revert();
       context.revert();
     };
@@ -490,11 +417,23 @@ const Gallery = () => {
             <span className="home-gallery__title-line" aria-hidden="true" />
           </div>
 
-          <p className="home-gallery__subtitle">
-            Explore our portfolio of successful campaigns, crafted to create
-            meaningful connections, strengthen brands, and deliver measurable
-            impact.
-          </p>
+          <div className="home-gallery__heading-side">
+            <p className="home-gallery__subtitle">
+              Explore our portfolio of successful campaigns, crafted to create
+              meaningful connections, strengthen brands, and deliver measurable
+              impact.
+            </p>
+
+            <button
+              type="button"
+              className="home-gallery__skip-button"
+              onClick={handleSkipGallery}
+              aria-label="Skip the projects gallery"
+            >
+              <span>Skip section</span>
+              <ChevronsDown size={17} aria-hidden="true" />
+            </button>
+          </div>
         </header>
 
         <div ref={viewportRef} className="home-gallery__viewport">

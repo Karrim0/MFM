@@ -7,7 +7,6 @@
   isolation: isolate;
 
   min-height: calc(100dvh - var(--mfm-navbar-height, 84px));
-
   padding: 68px 0 38px;
 
   overflow: hidden;
@@ -48,7 +47,7 @@
     ),
     linear-gradient(135deg, #015f6d 0%, #017b8d 42%, #1c909f 72%, #58b3bd 100%);
 
-  transform-origin: center;
+  pointer-events: none;
 }
 
 .home-gallery__grid {
@@ -128,17 +127,20 @@
 
 .home-gallery__shell {
   display: flex;
-  min-height: calc(100dvh - var(--mfm-navbar-height, 84px) - 106px);
-
-  flex-direction: column;
 
   width: min(
     var(--mfm-layout-width, 1280px),
     calc(100% - var(--mfm-layout-gutter, 48px))
   );
 
+  min-height: calc(100dvh - var(--mfm-navbar-height, 84px) - 106px);
+
   margin-inline: auto;
+
+  flex-direction: column;
 }
+
+/* ================= HEADER ================= */
 
 /* ================= HEADER ================= */
 
@@ -151,6 +153,32 @@
   gap: clamp(35px, 5vw, 70px);
   align-items: end;
 }
+
+.home-gallery__title-group {
+  min-width: 0;
+}
+
+.home-gallery__heading-side {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.home-gallery__subtitle {
+  max-width: 570px;
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.82);
+
+  font-size: clamp(0.92rem, 1.25vw, 1.04rem);
+  font-weight: 400;
+  line-height: 1.78;
+  text-align: right;
+}
+
+
 
 .home-gallery__title-group {
   min-width: 0;
@@ -254,6 +282,7 @@
 
   will-change: transform;
 }
+
 /* ================= CARDS ================= */
 
 .home-gallery__card {
@@ -279,34 +308,9 @@
   backface-visibility: hidden;
 
   transition:
-    border-color 0.4s ease,
-    box-shadow 0.4s ease,
-    transform 0.4s ease;
-}
-
-.home-gallery__card::before {
-  content: "";
-
-  position: absolute;
-  top: 0;
-  left: -135%;
-  z-index: 3;
-
-  width: 55%;
-  height: 100%;
-
-  background: linear-gradient(
-    105deg,
-    transparent,
-    rgba(255, 255, 255, 0.18),
-    transparent
-  );
-
-  transform: skewX(-18deg);
-
-  transition: left 0.85s ease;
-
-  pointer-events: none;
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s ease;
 }
 
 .home-gallery__card--featured {
@@ -321,18 +325,14 @@
 }
 
 .home-gallery__card:hover {
-  border-color: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.36);
 
   box-shadow:
-    0 20px 44px rgba(0, 34, 40, 0.24),
-    0 6px 15px rgba(0, 34, 40, 0.09),
+    0 18px 40px rgba(0, 34, 40, 0.22),
+    0 5px 14px rgba(0, 34, 40, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
-  transform: translateY(-7px);
-}
-
-.home-gallery__card:hover::before {
-  left: 145%;
+  transform: translateY(-4px);
 }
 
 .home-gallery__image {
@@ -347,7 +347,7 @@
   backface-visibility: hidden;
 }
 
-/* ================= CARD OVERLAY ================= */
+/* ================= CARD CONTENT ================= */
 
 .home-gallery__card-overlay {
   position: absolute;
@@ -363,23 +363,21 @@
     ),
     linear-gradient(135deg, rgba(1, 123, 141, 0.13), transparent 48%);
 
-  transition: background 0.4s ease;
-
   pointer-events: none;
+
+  transition: background 0.35s ease;
 }
 
 .home-gallery__card:hover .home-gallery__card-overlay {
   background:
     linear-gradient(
       to top,
-      rgba(0, 32, 38, 0.94) 0%,
-      rgba(1, 70, 81, 0.39) 50%,
+      rgba(0, 32, 38, 0.93) 0%,
+      rgba(1, 70, 81, 0.38) 50%,
       transparent 77%
     ),
-    linear-gradient(135deg, rgba(99, 198, 207, 0.15), transparent 50%);
+    linear-gradient(135deg, rgba(99, 198, 207, 0.14), transparent 50%);
 }
-
-/* ================= CARD NUMBER ================= */
 
 .home-gallery__card-number {
   position: absolute;
@@ -388,6 +386,7 @@
   z-index: 2;
 
   display: grid;
+
   min-width: 40px;
   height: 40px;
   padding-inline: 8px;
@@ -410,8 +409,6 @@
   -webkit-backdrop-filter: blur(11px) saturate(130%);
 }
 
-/* ================= CAPTION ================= */
-
 .home-gallery__caption {
   position: absolute;
   right: 24px;
@@ -421,11 +418,11 @@
 
   color: #ffffff;
 
-  transition: transform 0.4s ease;
+  transition: transform 0.35s ease;
 }
 
 .home-gallery__card:hover .home-gallery__caption {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .home-gallery__caption-label {
@@ -453,12 +450,11 @@
   text-shadow: 0 8px 20px rgba(0, 28, 33, 0.22);
 }
 
-/* ================= PROGRESS ================= */
+/* ================= FOOTER CONTROLS ================= */
 
 .home-gallery__progress {
   width: 100%;
   height: 4px;
-  margin-top: 23px;
 
   overflow: hidden;
 
@@ -486,6 +482,75 @@
   transform-origin: left center;
 
   will-change: transform;
+}
+
+.home-gallery__skip-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 42px;
+  padding: 0 17px;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.9);
+
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(0, 43, 50, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.home-gallery__skip-button svg {
+  flex: 0 0 auto;
+
+  transition: transform 0.3s ease;
+}
+
+.home-gallery__skip-button:hover {
+  border-color: rgba(255, 255, 255, 0.62);
+
+  background: #ffffff;
+  color: #017b8d;
+
+  box-shadow:
+    0 12px 26px rgba(0, 38, 44, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  transform: translateY(-2px);
+}
+
+.home-gallery__skip-button:hover svg {
+  transform: translateY(2px);
+}
+
+.home-gallery__skip-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.home-gallery__skip-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 4px;
 }
 
 /* ================= TABLET ================= */
@@ -556,6 +621,8 @@
   .home-gallery__track {
     gap: 16px;
     padding: 8px 24px 8px 0;
+
+    will-change: auto;
   }
 
   .home-gallery__card,
@@ -569,7 +636,7 @@
     scroll-snap-align: start;
   }
 
-  .home-gallery__progress {
+  .home-gallery__footer {
     display: none;
   }
 }
@@ -616,13 +683,14 @@
   .home-gallery__card,
   .home-gallery__card--featured {
     flex-basis: 84vw;
+
     height: 280px;
 
     border-radius: 17px;
   }
 
   .home-gallery__card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
 
   .home-gallery__card-number {
@@ -664,26 +732,32 @@
   }
 }
 
-/* ================= ANIMATION PERFORMANCE ================= */
+/* ================= PERFORMANCE ================= */
 
 .home-gallery__background,
 .home-gallery__grid,
 .home-gallery__glow,
+.home-gallery__kicker,
 .home-gallery__title,
 .home-gallery__title-line,
 .home-gallery__subtitle,
 .home-gallery__track,
 .home-gallery__card,
 .home-gallery__image,
-.home-gallery__card-number,
-.home-gallery__caption {
+.home-gallery__caption,
+.home-gallery__footer {
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 /* ================= REDUCED MOTION ================= */
 
 @media (prefers-reduced-motion: reduce) {
+  .home-gallery {
+    min-height: auto;
+  }
+
   .home-gallery *,
   .home-gallery *::before,
   .home-gallery *::after {
@@ -696,9 +770,26 @@
     transition-delay: 0ms !important;
   }
 
+  .home-gallery__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: thin;
+  }
+
+  .home-gallery__track {
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .home-gallery__footer {
+    display: none;
+  }
+
   .home-gallery__card:hover,
-  .home-gallery__card:hover .home-gallery__image,
-  .home-gallery__card:hover .home-gallery__caption {
+  .home-gallery__card:hover .home-gallery__caption,
+  .home-gallery__skip-button:hover,
+  .home-gallery__skip-button:hover svg {
     transform: none;
   }
 }
