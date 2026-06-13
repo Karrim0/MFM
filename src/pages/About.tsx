@@ -1,6 +1,10 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaCheckCircle } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaCheckCircle,
+} from "react-icons/fa";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -27,9 +31,17 @@ type GalleryItem = {
 const galleryItems: GalleryItem[] = [
   { type: "image", src: project1, title: "Brand activation" },
   { type: "image", src: project2, title: "Retail experience" },
-  { type: "video", src: "/video/project4.mp4", title: "Campaign production" },
+  {
+    type: "video",
+    src: "/video/project4.mp4",
+    title: "Campaign production",
+  },
   { type: "image", src: project3, title: "Live event" },
-  { type: "video", src: "/video/project5.mp4", title: "Creative execution" },
+  {
+    type: "video",
+    src: "/video/project5.mp4",
+    title: "Creative execution",
+  },
   { type: "image", src: project5, title: "Audience engagement" },
   { type: "image", src: project6, title: "Exhibition experience" },
   { type: "image", src: project7, title: "Corporate event" },
@@ -41,41 +53,66 @@ const About = () => {
   const heroRef = useRef<HTMLElement>(null);
   const mainMediaRef = useRef<HTMLDivElement>(null);
   const countRef = useRef<HTMLSpanElement>(null);
+  const thumbnailRowRef = useRef<HTMLDivElement>(null);
+  const thumbnailRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const isChangingSlideRef = useRef(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
+
   const navigate = useNavigate();
 
-  const changeSlide = (nextIndex: number) => {
+  const changeSlide = (requestedIndex: number) => {
     const mediaElement = mainMediaRef.current;
 
-    if (!mediaElement || nextIndex === activeIndex) return;
+    const nextIndex =
+      (requestedIndex + galleryItems.length) % galleryItems.length;
+
+    if (
+      !mediaElement ||
+      nextIndex === activeIndex ||
+      isChangingSlideRef.current
+    ) {
+      return;
+    }
+
+    isChangingSlideRef.current = true;
 
     gsap.killTweensOf(mediaElement);
 
     gsap.to(mediaElement, {
       autoAlpha: 0,
-      y: 8,
-      duration: 0.55,
-      ease: "power2.inOut",
+      y: 10,
+      scale: 0.992,
+      duration: 0.32,
+      ease: "power2.in",
       onComplete: () => {
         setActiveIndex(nextIndex);
 
         requestAnimationFrame(() => {
           const updatedMediaElement = mainMediaRef.current;
 
-          if (!updatedMediaElement) return;
+          if (!updatedMediaElement) {
+            isChangingSlideRef.current = false;
+            return;
+          }
 
           gsap.fromTo(
             updatedMediaElement,
             {
               autoAlpha: 0,
-              y: 8,
+              y: 12,
+              scale: 0.992,
             },
             {
               autoAlpha: 1,
               y: 0,
-              duration: 0.8,
-              ease: "power2.out",
+              scale: 1,
+              duration: 0.65,
+              ease: "power3.out",
+              clearProps: "transform,opacity,visibility",
+              onComplete: () => {
+                isChangingSlideRef.current = false;
+              },
             },
           );
         });
@@ -84,55 +121,95 @@ const About = () => {
   };
 
   const nextSlide = () => {
-    changeSlide((activeIndex + 1) % galleryItems.length);
+    changeSlide(activeIndex + 1);
   };
 
   const previousSlide = () => {
-    changeSlide(activeIndex === 0 ? galleryItems.length - 1 : activeIndex - 1);
+    changeSlide(activeIndex - 1);
   };
 
   useLayoutEffect(() => {
+    const page = pageRef.current;
+
+    if (!page) return;
+
     const media = gsap.matchMedia();
 
     const context = gsap.context(() => {
       media.add("(prefers-reduced-motion: no-preference)", () => {
-        const sideOffset = window.innerWidth <= 768 ? 28 : 70;
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        const horizontalOffset = isMobile ? 26 : 52;
 
-        /* ================= HERO ================= */
+        const heroTimeline = gsap.timeline({
+          defaults: {
+            ease: "power3.out",
+            force3D: true,
+          },
+        });
 
-        gsap
-          .timeline({
-            defaults: {
-              ease: "power2.out",
-            },
-          })
+        heroTimeline
           .fromTo(
-            ".about-hero-title",
+            ".about-hero-video",
             {
-              x: -sideOffset,
-              autoAlpha: 0,
+              scale: 1.045,
+              autoAlpha: 0.72,
             },
             {
-              x: 0,
+              scale: 1,
               autoAlpha: 1,
-              duration: 1.9,
+              duration: 1.8,
+              clearProps: "transform,opacity,visibility",
             },
+            0,
           )
           .fromTo(
-            ".about-hero-copy",
+            ".about-hero-brand",
             {
-              x: sideOffset,
+              x: -horizontalOffset,
+              y: 10,
               autoAlpha: 0,
             },
             {
               x: 0,
+              y: 0,
               autoAlpha: 1,
-              duration: 1.9,
+              duration: 1.15,
+              clearProps: "transform,opacity,visibility",
             },
-            "-=1.05",
+            0.2,
+          )
+          .fromTo(
+            ".about-hero-company",
+            {
+              x: -horizontalOffset * 0.7,
+              y: 14,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.1,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.4,
+          )
+          .fromTo(
+            ".about-hero-description",
+            {
+              y: 24,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              stagger: 0.14,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.62,
           );
-
-        /* ================= HERO VIDEO ================= */
 
         gsap.to(".about-hero-video", {
           yPercent: 3,
@@ -141,199 +218,511 @@ const About = () => {
             trigger: heroRef.current,
             start: "top top",
             end: "bottom top",
-            scrub: 2.2,
+            scrub: 1.8,
             invalidateOnRefresh: true,
           },
         });
 
-        /* ================= STORY ================= */
-
-        gsap.fromTo(
-          ".about-story-media",
-          {
-            x: -sideOffset,
-            autoAlpha: 0,
+        const storyTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".about-story-section",
+            start: isMobile ? "top 90%" : "top 82%",
+            once: true,
+            invalidateOnRefresh: true,
           },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-story-section",
-              start: "top 82%",
-              once: true,
+          defaults: {
+            ease: "power3.out",
+            force3D: true,
+          },
+        });
+
+        storyTimeline
+          .fromTo(
+            ".about-story-media",
+            {
+              x: isMobile ? 0 : -horizontalOffset,
+              y: isMobile ? 34 : 12,
+              scale: 0.975,
+              autoAlpha: 0,
             },
-          },
-        );
-
-        gsap.fromTo(
-          ".about-story-content",
-          {
-            x: sideOffset,
-            autoAlpha: 0,
-          },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-story-section",
-              start: "top 82%",
-              once: true,
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              duration: 1.35,
+              clearProps: "transform,opacity,visibility",
             },
-          },
-        );
-
-        /* ================= EXPERIENCE ================= */
-
-        gsap.fromTo(
-          ".about-experience-card",
-          {
-            x: -sideOffset,
-            autoAlpha: 0,
-          },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-experience-section",
-              start: "top 82%",
-              once: true,
+            0,
+          )
+          .fromTo(
+            ".about-story-image-wrap",
+            {
+              y: 18,
+              autoAlpha: 0,
             },
-          },
-        );
-
-        gsap.fromTo(
-          ".about-experience-content",
-          {
-            x: sideOffset,
-            autoAlpha: 0,
-          },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-experience-section",
-              start: "top 82%",
-              once: true,
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
             },
-          },
-        );
+            0.22,
+          )
+          .fromTo(
+            ".about-story-line",
+            {
+              scaleY: 0,
+              autoAlpha: 0,
+              transformOrigin: "top center",
+            },
+            {
+              scaleY: 1,
+              autoAlpha: 1,
+              duration: 1.05,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.2,
+          )
+          .fromTo(
+            ".about-heading",
+            {
+              x: isMobile ? 0 : horizontalOffset,
+              y: isMobile ? 28 : 10,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.2,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.3,
+          )
+          .fromTo(
+            ".about-story-lead",
+            {
+              y: 24,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.52,
+          )
+          .fromTo(
+            ".about-story-description",
+            {
+              y: 24,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.68,
+          )
+          .fromTo(
+            ".about-story-approach",
+            {
+              y: 28,
+              scale: 0.98,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              duration: 1.1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.84,
+          )
+          .fromTo(
+            ".about-story-approach h3",
+            {
+              x: -14,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              autoAlpha: 1,
+              duration: 0.75,
+              clearProps: "transform,opacity,visibility",
+            },
+            1.02,
+          )
+          .fromTo(
+            ".about-story-approach p",
+            {
+              y: 16,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.85,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            1.12,
+          );
 
-        /* ================= COUNTER ================= */
+        const counterState = {
+          value: 0,
+        };
 
         if (countRef.current) {
-          gsap.fromTo(
-            countRef.current,
-            {
-              innerText: 0,
-            },
-            {
-              innerText: 40,
-              duration: 2.4,
-              snap: {
-                innerText: 1,
-              },
-              ease: "power1.out",
-              scrollTrigger: {
-                trigger: ".about-experience-section",
-                start: "top 82%",
-                once: true,
-              },
-            },
-          );
+          countRef.current.textContent = "0";
+          gsap.set(countRef.current, {
+            autoAlpha: 1,
+          });
         }
 
-        /* ================= PROJECTS HEADING ================= */
-
-        gsap.fromTo(
-          ".about-projects-heading > div",
-          {
-            x: -sideOffset,
-            autoAlpha: 0,
+        const counterTween = gsap.to(counterState, {
+          value: 40,
+          duration: 2.2,
+          paused: true,
+          ease: "power2.out",
+          snap: {
+            value: 1,
           },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-projects-heading",
-              start: "top 84%",
-              once: true,
+          onUpdate: () => {
+            if (countRef.current) {
+              countRef.current.textContent = Math.round(
+                counterState.value,
+              ).toString();
+            }
+          },
+          onComplete: () => {
+            if (countRef.current) {
+              countRef.current.textContent = "40";
+            }
+          },
+        });
+
+        const experienceTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".about-experience-section",
+            start: isMobile ? "top 92%" : "top 84%",
+            once: true,
+            invalidateOnRefresh: true,
+            onEnter: () => {
+              counterTween.restart();
             },
           },
-        );
-
-        gsap.fromTo(
-          ".about-projects-heading > p",
-          {
-            x: sideOffset,
-            autoAlpha: 0,
+          defaults: {
+            ease: "power3.out",
+            force3D: true,
           },
-          {
-            x: 0,
-            autoAlpha: 1,
-            duration: 1.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-projects-heading",
-              start: "top 84%",
-              once: true,
+        });
+
+        experienceTimeline
+          .fromTo(
+            ".about-experience-card",
+            {
+              x: isMobile ? 0 : -horizontalOffset,
+              y: isMobile ? 34 : 12,
+              scale: 0.965,
+              autoAlpha: 0,
             },
-          },
-        );
-
-        /* ================= PROJECTS SLIDER ================= */
-
-        gsap.fromTo(
-          ".about-slider",
-          {
-            y: 25,
-            autoAlpha: 0,
-          },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 1.7,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-slider",
-              start: "top 84%",
-              once: true,
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              duration: 1.3,
+              clearProps: "transform,opacity,visibility",
             },
-          },
-        );
-
-        /* ================= THUMBNAILS ================= */
-
-        gsap.fromTo(
-          ".about-thumb",
-          {
-            y: 16,
-            autoAlpha: 0,
-          },
-          {
-            y: 0,
-            autoAlpha: 1,
-            duration: 1.25,
-            stagger: 0.14,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".about-thumbnail-row",
-              start: "top 90%",
-              once: true,
+            0,
+          )
+          .fromTo(
+            ".about-experience-number",
+            {
+              y: 20,
+              autoAlpha: 0,
             },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.16,
+          )
+          .fromTo(
+            ".about-experience-card p",
+            {
+              y: 15,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.85,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.34,
+          )
+          .fromTo(
+            ".about-experience-content .about-section-kicker",
+            {
+              x: isMobile ? 0 : horizontalOffset,
+              y: isMobile ? 24 : 8,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.16,
+          )
+          .fromTo(
+            ".about-experience-content h2",
+            {
+              x: isMobile ? 0 : horizontalOffset,
+              y: isMobile ? 28 : 10,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.15,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.32,
+          )
+          .fromTo(
+            ".about-experience-content > p",
+            {
+              y: 24,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.52,
+          )
+          .fromTo(
+            ".about-check-list li",
+            {
+              x: isMobile ? 0 : 24,
+              y: isMobile ? 18 : 0,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.85,
+              stagger: 0.12,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.68,
+          )
+          .fromTo(
+            ".about-btn--light",
+            {
+              y: 24,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.95,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            1,
+          );
+
+        const projectsTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".about-projects-section",
+            start: isMobile ? "top 90%" : "top 84%",
+            once: true,
+            invalidateOnRefresh: true,
           },
-        );
+          defaults: {
+            ease: "power3.out",
+            force3D: true,
+          },
+        });
+
+        projectsTimeline
+          .fromTo(
+            ".about-projects-heading .about-section-kicker",
+            {
+              x: isMobile ? 0 : -horizontalOffset,
+              y: isMobile ? 22 : 8,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.95,
+              clearProps: "transform,opacity,visibility",
+            },
+            0,
+          )
+          .fromTo(
+            ".about-projects-heading h2",
+            {
+              x: isMobile ? 0 : -horizontalOffset,
+              y: isMobile ? 28 : 10,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.15,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.14,
+          )
+          .fromTo(
+            ".about-projects-title-line",
+            {
+              scaleX: 0,
+              autoAlpha: 0,
+              transformOrigin: "left center",
+            },
+            {
+              scaleX: 1,
+              autoAlpha: 1,
+              duration: 0.85,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.36,
+          )
+          .fromTo(
+            ".about-projects-heading > p",
+            {
+              x: isMobile ? 0 : horizontalOffset,
+              y: isMobile ? 24 : 10,
+              autoAlpha: 0,
+            },
+            {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.28,
+          )
+          .fromTo(
+            ".about-slider",
+            {
+              y: 40,
+              scale: 0.98,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              scale: 1,
+              autoAlpha: 1,
+              duration: 1.25,
+              clearProps: "transform,opacity,visibility",
+            },
+            0.5,
+          )
+          .fromTo(
+            ".about-main-media-caption",
+            {
+              y: 20,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.78,
+          )
+          .fromTo(
+            ".about-nav",
+            {
+              scale: 0.9,
+              autoAlpha: 0,
+            },
+            {
+              scale: 1,
+              autoAlpha: 1,
+              duration: 0.75,
+              stagger: 0.1,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.86,
+          )
+          .fromTo(
+            ".about-thumbnail-row",
+            {
+              y: 22,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.95,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            0.94,
+          )
+          .fromTo(
+            ".about-thumb",
+            {
+              y: 18,
+              autoAlpha: 0,
+            },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.8,
+              stagger: 0.07,
+              ease: "power2.out",
+              clearProps: "transform,opacity,visibility",
+            },
+            1.02,
+          );
       });
-    }, pageRef);
+
+      media.add("(prefers-reduced-motion: reduce)", () => {
+        if (countRef.current) {
+          countRef.current.textContent = "40";
+        }
+      });
+    }, page);
 
     return () => {
       media.revert();
@@ -342,9 +731,10 @@ const About = () => {
   }, []);
 
   useLayoutEffect(() => {
-    const thumbnailVideos = pageRef.current?.querySelectorAll<HTMLVideoElement>(
-      ".about-thumbnail-row video",
-    );
+    const thumbnailVideos =
+      pageRef.current?.querySelectorAll<HTMLVideoElement>(
+        ".about-thumbnail-row video",
+      );
 
     thumbnailVideos?.forEach((video) => {
       video.pause();
@@ -358,7 +748,75 @@ const About = () => {
       activeVideo.currentTime = 0;
       activeVideo.play().catch(() => undefined);
     }
+
+    const thumbnailRow = thumbnailRowRef.current;
+    const activeThumbnail = thumbnailRefs.current[activeIndex];
+
+    if (!thumbnailRow || !activeThumbnail) return;
+
+    const targetPosition =
+      activeThumbnail.offsetLeft -
+      (thumbnailRow.clientWidth - activeThumbnail.offsetWidth) / 2;
+
+    const maximumScroll =
+      thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
+
+    const nextScrollPosition = Math.min(
+      Math.max(targetPosition, 0),
+      maximumScroll,
+    );
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    thumbnailRow.scrollTo({
+      left: nextScrollPosition,
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
   }, [activeIndex]);
+
+  useLayoutEffect(() => {
+    const thumbnailRow = thumbnailRowRef.current;
+
+    if (!thumbnailRow) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+
+      const maximumScroll =
+        thumbnailRow.scrollWidth - thumbnailRow.clientWidth;
+
+      if (maximumScroll <= 0) return;
+
+      const movingForward = event.deltaY > 0;
+      const atStart = thumbnailRow.scrollLeft <= 0;
+      const atEnd =
+        thumbnailRow.scrollLeft >= maximumScroll - 1;
+
+      if (
+        (movingForward && atEnd) ||
+        (!movingForward && atStart)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      thumbnailRow.scrollBy({
+        left: event.deltaY,
+        behavior: "auto",
+      });
+    };
+
+    thumbnailRow.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
+
+    return () => {
+      thumbnailRow.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   const activeItem = galleryItems[activeIndex];
 
@@ -378,12 +836,14 @@ const About = () => {
             <source src="/video/back.mp4" type="video/mp4" />
           </video>
 
-          <div className="about-hero-overlay" />
+          <div className="about-hero-overlay" aria-hidden="true" />
 
           <div className="about-shell about-hero-layout">
             <div className="about-hero-content">
               <h1 className="about-hero-title">
-                <span className="about-hero-brand">MFM-EGYPT</span>
+                <span className="about-hero-brand">
+                  MFM-EGYPT
+                </span>
 
                 <span className="about-hero-company">
                   Marketing Facility Management
@@ -392,21 +852,22 @@ const About = () => {
 
               <div className="about-hero-copy">
                 <p className="about-hero-description">
-                  the company with more than 40 years’ experience in Egypt,
-                  Qatar, UAE, and KSA as an Integrated marketing communications
-                  and Public Relations firm.
+                  The company with more than 40 years’ experience in Egypt,
+                  Qatar, UAE, and KSA as an integrated marketing
+                  communications and public relations firm.
                 </p>
 
                 <p className="about-hero-description">
-                  We have an enviable list of clients across many sectors, all
-                  with one thing in common – the desire to maximize their
-                  returns through relevant, engaging, results-driven marketing.
+                  We have an enviable list of clients across many sectors,
+                  all with one thing in common — the desire to maximize
+                  their returns through relevant, engaging, results-driven
+                  marketing.
                 </p>
 
                 <p className="about-hero-description">
                   Our aim is simple: to win trust and business with original
-                  ideas that excite and engage through Business, Sports,
-                  Entertainment, and CSR initiatives.
+                  ideas that excite and engage through business, sports,
+                  entertainment, and CSR initiatives.
                 </p>
               </div>
             </div>
@@ -417,39 +878,45 @@ const About = () => {
           <div className="about-shell about-story-grid">
             <div className="about-story-media">
               <div className="about-story-image-wrap">
-                <img src={aboutImage} alt="MFM SAVE marketing model" />
+                <img
+                  src={aboutImage}
+                  alt="MFM SAVE marketing model"
+                  decoding="async"
+                />
               </div>
             </div>
 
             <div className="about-story-content">
-              <span className="about-story-line" aria-hidden="true" />
+              <span
+                className="about-story-line"
+                aria-hidden="true"
+              />
 
-              <h2 className="about-heading">Marketing Facility Management</h2>
+              <h2 className="about-heading">
+                Marketing Facility Management
+              </h2>
 
               <p className="about-story-lead">
                 We believe that we live in a real-time world, which demands
                 real-time agencies.
               </p>
 
-              <p>
+              <p className="about-story-description">
                 In today&apos;s world, change is constant and complexity is
                 ever-growing. Organizations need communications partners to
                 provide senior counsel and data-driven solutions to protect
-                their brands and drive business results. mfm agency SAVE model
-                was created to do just that.
+                their brands and drive business results. MFM agency&apos;s
+                SAVE model was created to do just that.
               </p>
 
               <div className="about-story-approach">
                 <h3>Our Approach</h3>
 
                 <p>
-                  Our approach is based on The SAVE model which is a marketing
-                  framework that focuses on providing solutions to customers and
-                  stakeholders, making products and services accessible,
-                  demonstrating value, and educating all stakeholders. It is a
-                  more customer-centric approach to marketing public relations
-                  than the traditional 4Ps (product, price, place, and
-                  promotion).
+                  Our approach is based on the SAVE model, a marketing
+                  framework focused on providing solutions, making products
+                  and services accessible, demonstrating value, and
+                  educating stakeholders.
                 </p>
               </div>
             </div>
@@ -471,12 +938,15 @@ const About = () => {
                 Why choose us
               </span>
 
-              <h2>Focused on work that gets done — and gets results.</h2>
+              <h2>
+                Focused on work that gets done — and gets results.
+              </h2>
 
               <p>
-                We combine strategic thinking with practical delivery, helping
-                organizations create stronger communication, better audience
-                experiences and more meaningful client relationships.
+                We combine strategic thinking with practical delivery,
+                helping organizations create stronger communication, better
+                audience experiences, and more meaningful client
+                relationships.
               </p>
 
               <ul className="about-check-list">
@@ -512,13 +982,21 @@ const About = () => {
           <div className="about-shell about-projects-shell">
             <header className="about-projects-heading">
               <div>
-                <span className="about-section-kicker">Selected work</span>
+                <span className="about-section-kicker">
+                  Selected work
+                </span>
+
                 <h2>Our projects</h2>
+
+                <span
+                  className="about-projects-title-line"
+                  aria-hidden="true"
+                />
               </div>
 
               <p>
-                A closer look at some of our campaigns, activations, events and
-                audience experiences.
+                A closer look at some of our campaigns, activations,
+                events, and audience experiences.
               </p>
             </header>
 
@@ -529,7 +1007,11 @@ const About = () => {
                 aria-live="polite"
               >
                 {activeItem.type === "image" ? (
-                  <img src={activeItem.src} alt={activeItem.title} />
+                  <img
+                    src={activeItem.src}
+                    alt={activeItem.title}
+                    decoding="async"
+                  />
                 ) : (
                   <video
                     src={activeItem.src}
@@ -571,17 +1053,27 @@ const About = () => {
               </button>
             </div>
 
-            <div className="about-thumbnail-row">
+            <div
+              ref={thumbnailRowRef}
+              className="about-thumbnail-row"
+            >
               {galleryItems.map((item, index) => (
                 <button
+                  ref={(element) => {
+                    thumbnailRefs.current[index] = element;
+                  }}
                   type="button"
                   key={`${item.src}-${index}`}
                   className={`about-thumb${
-                    index === activeIndex ? " about-thumb--active" : ""
+                    index === activeIndex
+                      ? " about-thumb--active"
+                      : ""
                   }`}
                   onClick={() => changeSlide(index)}
                   aria-label={`Open ${item.title}`}
-                  aria-current={index === activeIndex ? "true" : undefined}
+                  aria-current={
+                    index === activeIndex ? "true" : undefined
+                  }
                 >
                   {item.type === "image" ? (
                     <img
@@ -599,7 +1091,9 @@ const About = () => {
                     />
                   )}
 
-                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <span>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                 </button>
               ))}
             </div>

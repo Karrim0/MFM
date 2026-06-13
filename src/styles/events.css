@@ -66,21 +66,21 @@
 }
 
 .events-hero-overlay {
-  position: absolute;
+    position: absolute;
   inset: 0;
   z-index: 2;
 
- background:
-    linear-gradient(
-      90deg,
-      rgba(0, 45, 53, 0.72) 0%,
-      rgba(1, 123, 141, 0.38) 58%,
-      rgba(255, 255, 255, 0.08) 100%
+  background:
+    radial-gradient(
+      circle at 25% 35%,
+      rgba(1, 123, 141, 0.42) 0%,
+      rgba(1, 123, 141, 0.24) 28%,
+      transparent 65%
     ),
     linear-gradient(
       120deg,
-      rgba(1, 123, 141, 0.46) 45%,
-      rgba(131, 131, 131, 0.34) 100%
+      rgba(1, 123, 141, 0.48) 40%,
+      rgba(90, 100, 105, 0.28) 100%
     );
 
   pointer-events: none;
